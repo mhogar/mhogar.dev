@@ -1,0 +1,62 @@
+[
+    {
+        "name": "Byte Sized",
+        "category": "projects",
+        "order": 0,
+        "date": "Winter 2021 - Present",
+        "link": "https://github.com/mhogar/ByteSized",
+        "colour": "purple",
+        "image": "imgs/byte_sized_thumbnail.png",
+        "description": "Byte Sized is an ongoing YouTube series where we create bite-sized applications to demonstrate some of the more interesting concepts in the field of programming."
+    },
+    {
+        "name": "Slime Farm",
+        "category": "projects",
+        "order": 10,
+        "date": "Fall 2020",
+        "link": "https://github.com/mhogar/SlimeFarm",
+        "colour": "purple",
+        "image": "imgs/slime_farm_thumbnail.png",
+        "description": "Slime Farm is an evolution simulator. Completed as a university individual course of study, this application is an intuitive and user-friendly approach to genetic algorithms."
+    },
+    {
+        "name": "Student's Toolshed",
+        "category": "projects",
+        "order": 20,
+        "date": "Winter 2019",
+        "link": "https://students-toolshed.herokuapp.com/",
+        "colour": "blue",
+        "image": "imgs/st_thumbnail.png",
+        "description": "Created using ruby-on-rails, Student's Toolshed is a collection of self-contained javascript applications. The apps themselves are small, useful tools targeted for use by university students."
+    },
+    {
+        "name": "Course Scheduler",
+        "category": "projects",
+        "order": 40,
+        "date": "Spring 2018",
+        "link": "https://github.com/mhogar/course-scheduler",
+        "colour": "purple",
+        "image": "imgs/scheduler_thumbnail.png",
+        "description": "Course Scheduler is an application that generates all possible schedules given the timeslots for each course. It may look and feel like legacy software, but it gets the job done."
+    },
+    {
+        "name": "Study Pres Generator",
+        "category": "projects",
+        "order": 30,
+        "date": "Fall 2019",
+        "link": "https://github.com/mhogar/StudyPresGenerator",
+        "colour": "purple",
+        "image": "imgs/spg_thumbnail.png",
+        "description": "Study Pres Generator is a simple command-line ruby application for creating flashcard study presentations. It takes a JSON file of questions and answers as input and uses LaTeX to create the presentation."
+    },
+    {
+        "name": "Migration Runner",
+        "category": "projects",
+        "order": 15,
+        "date": "Summer 2020",
+        "link": "https://github.com/mhogar/migrationrunner",
+        "colour": "purple",
+        "image": "imgs/mr_thumbnail.png",
+        "description": "Migration Runner is a Go library for managing and running database migrations. It is maintained by a continuous integration pipeline and boasts 100% test coverage."
+    }
+]

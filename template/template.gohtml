@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2, user-scalable=no" />
+    <title>mhogar</title>
+
+    <link rel="stylesheet" type="text/css" href="css/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+    <div class="ui raised wrapper segment">
+        <div class="ui inverted vertical masthead center aligned segment">
+            <div class="ui text container">
+                <h1 class="ui inverted header">Hello Everybody, mhogar Here!</h1>
+                <h2>Join me as we create fun and interesting projects, games, and animations. </h2>
+                <a class="ui huge red inverted button" href="https://www.youtube.com/channel/UCgCKSx3Y9R0ulpEG5Kcfckg"
+                    target="_blank">
+                    <i class="youtube icon"></i> YouTube
+                </a>
+                <a class="ui huge purple inverted button" href="https://github.com/mhogar" target="_blank">
+                    <i class="github icon"></i> GitHub
+                </a>
+            </div>
+        </div>
+        <div class="ui stripe vertical segment">
+            <div class="ui middle aligned stackable container">
+                <h3 class="ui header">
+                    <i class="user icon"></i>
+                    <div class="content">
+                        Ryan "mhogar" Stamp
+                    </div>
+                </h3>
+                <p>
+                    Currently pursuing a Bachelor of Computing, I have a passion for programming and expressing myself creatively. I'll hope you'll join me on my quest to make the world a better place, one line of code at a time.
+                </p>
+            </div>
+        </div>
+        <div class="ui container">
+            <div id="content-menu" class="ui huge three item stackable menu">
+                <a id="projects-menu-item" class="item">Projects</a>
+                <a id="games-menu-item" class="item">Games</a>
+                <a id="animations-menu-item" class="item">Animations</a>
+            </div>
+            <div id="content-cards" class="ui three stackable link cards">
+            {{range .}}
+                <a class="ui raised {{.Colour}} card" href="{{.Link}}" target="_blank" data-category="{{.Category}}">
+                    <div class="image">
+                        <img src="{{.Image}}">
+                    </div>
+                    <div class="content">
+                        <div class="header">{{.Name}}</div>
+                        <div class="description">{{.Description}}</div>
+                    </div>
+                    <div class="extra content right aligned">
+                        {{.Date}}
+                    </div>
+                </a>
+            {{end}}
+            </div>
+        </div>
+        <div class="ui inverted vertical footer segment">
+            <div class="ui container">
+                <div class="ui stackable inverted divided equal height stackable grid">
+                    <div class="three wide column">
+                        <h4 class="ui inverted header">Other links</h4>
+                        <div class="ui inverted link list">
+                            <a class="item" href="https://www.linkedin.com/in/ryan-stamp-a91020152/">
+                                <i class="linkedin icon"></i> Linked-in
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/index.js"></script>
+</body>
+
+</html>
