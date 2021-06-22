@@ -58,5 +58,25 @@
         "colour": "purple",
         "image": "imgs/mr_thumbnail.png",
         "description": "Migration Runner is a Go library for managing and running database migrations. It is maintained by a continuous integration pipeline and boasts 100% test coverage."
+    },
+    {
+        "name": "Cube Robots... in Space!!!",
+        "category": "games",
+        "order": 0,
+        "date": "Summer 2021",
+        "link": "https://mhogar.itch.io/cube-robots-in-space",
+        "colour": "yellow",
+        "image": "imgs/cube_robots_thumbnail.png",
+        "description": "Created for the GMTK Game Jam 2021, this is a simple puzzle game where you play as an adorable cube robot trying to destroy all platforms in the level. It placed in the top 16% of near 6000 entries."
+    },
+    {
+        "name": "The Creeper Whisperer",
+        "category": "animations",
+        "order": 0,
+        "date": "Spring 2021",
+        "link": "https://www.youtube.com/watch?v=Z2eHrym1PHQ",
+        "colour": "red",
+        "image": "imgs/creeper_whisper_thumbnail.jpg",
+        "description": "The Creeper Whisperer is a Minecraft animation of a segment from the 3rd life youtube series. In this animation, Grian lures a creeper into the group causing Scar's first death."
     }
 ]
