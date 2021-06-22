@@ -1,15 +1,20 @@
+const linkNames = ['projects', 'games', 'animations'];
+
 $(document).ready(function () {
-    setupMenuLinks();
+    // setup the menu links
+    linkNames.forEach(linkName => {
+        setupMenuLink(linkName);
+    });
+
+    // get tab name from search params
+    let selectedTab = new URL(window.location.href).searchParams.get('tab')
+    if (!linkNames.includes(selectedTab)) {
+        selectedTab = linkNames[0];
+    }
 
     // select the first active tab
-    clickMenuItem('projects');
+    clickMenuItem(selectedTab);
 });
-
-function setupMenuLinks() {
-    setupMenuLink('projects');
-    setupMenuLink('games');
-    setupMenuLink('animations');
-}
 
 function setupMenuLink(name) {
     const item = $(`#${name}-menu-item`);
@@ -20,6 +25,13 @@ function setupMenuLink(name) {
             return;
         }
         clickMenuItem(name);
+
+        // construct new url
+        const url = new URL(window.location.href);
+        url.searchParams.set('tab', name);
+        
+        // change the url, but don't reload
+        window.history.replaceState(null, "", url.href);
     });
 
     // calc card count and append to name
