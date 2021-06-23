@@ -50,6 +50,6 @@ function clickMenuItem(name) {
     $(`#${name}-menu-item`).addClass('active');
 
     // show only cards with this category
-    $("#content-cards").children().hide();
-    $(`a[data-category='${name}'`).show();
+    $("#content-cards").children().addClass('hidden');
+    $(`a[data-category='${name}'`).removeClass('hidden');
 }
