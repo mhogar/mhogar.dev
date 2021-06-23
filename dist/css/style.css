@@ -4,7 +4,7 @@ body {
   background-color: #eee;
 }
 
-.ui.stackable.cards > .card.hidden {
+.ui.stackable.cards > .hidden.card {
   display: none !important;
 }
 
