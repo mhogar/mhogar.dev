@@ -1,179 +1,178 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Template by Mark Otto, Jacob Thornton, and Bootstrap contributors; modifcations by Ryan Stamp">
+    <meta name="generator" content="Hugo 0.84.0">
+    <title>mhogar.dev</title>
 
-<head>
-    <meta charset="utf-8" />
-    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2, user-scalable=no" />
-    <title>mhogar</title>
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/carousel/">
 
-    <link rel="stylesheet" type="text/css" href="css/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-</head>
+    <!-- Bootstrap core CSS -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom styles -->
+    <link href="./css/style.css" rel="stylesheet">
+  </head>
 
-<body>
-    <div class="ui raised wrapper segment">
-        <div class="ui inverted vertical masthead center aligned segment">
-            <div class="ui text container">
-                <h1 class="ui inverted header">Hello Everybody, mhogar Here!</h1>
-                <h2>Join me as we create fun and interesting projects, games, and animations. </h2>
-                <a class="ui huge red inverted header-link button" href="https://www.youtube.com/channel/UC4TeW-oe79vNo5ewMXJvr4w"
-                    target="_blank">
-                    <i class="youtube icon"></i> YouTube
-                </a>
-                <a class="ui huge yellow inverted header-link button" href="https://mhogar.itch.io/" target="_blank">
-                    <i class="gamepad icon"></i> Itch.io
-                </a>
-                <a class="ui huge purple inverted header-link button" href="https://github.com/mhogar" target="_blank">
-                    <i class="github icon"></i> GitHub
-                </a>
-            </div>
+  <body>  
+    <header>
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">mhogar.dev</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+              <li class="nav-item">
+                <a class="nav-link" href="#">Portfolio</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Blog</a>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div class="ui stripe vertical segment">
-            <div class="ui middle aligned stackable container">
-                <h3 class="ui header">
-                    <i class="user icon"></i>
-                    <div class="content">
-                        Ryan "mhogar" Stamp
-                    </div>
-                </h3>
-                <p>
-                    Armed with a Bachelor of Computing, and pursing a Masters in Cybersecurity, I have a passion for programming and expressing myself creatively. I'll hope you'll join me on my quest to make the world a better place, one line of code at a time.
-                </p>
-            </div>
-        </div>
-        <div class="ui container">
-            <div id="content-menu" class="ui huge three item stackable menu">
-                <a id="projects-menu-item" class="item">Projects</a>
-                <a id="games-menu-item" class="item">Games</a>
-                <a id="animations-menu-item" class="item">Animations</a>
-            </div>
-            <div id="content-cards" class="ui three stackable link cards">
-            
-                <a class="ui raised purple hidden card" href="https://github.com/mhogar/ByteSized" target="_blank" data-category="projects">
-                    <div class="image">
-                        <img src="imgs/byte_sized_thumbnail.png">
-                    </div>
-                    <div class="content">
-                        <div class="header">Byte Sized</div>
-                        <div class="description">Byte Sized is an ongoing YouTube series where we create bite-sized applications to demonstrate some of the more interesting concepts in the field of programming.</div>
-                    </div>
-                    <div class="extra content right aligned">
-                        Winter 2021 - Present
-                    </div>
-                </a>
-            
-                <a class="ui raised red hidden card" href="https://www.youtube.com/watch?v=Z2eHrym1PHQ" target="_blank" data-category="animations">
-                    <div class="image">
-                        <img src="imgs/creeper_whisper_thumbnail.jpg">
-                    </div>
-                    <div class="content">
-                        <div class="header">The Creeper Whisperer</div>
-                        <div class="description">The Creeper Whisperer is a Minecraft animation of a scene from the 3rd Life YouTube series. In this animation, Grian lures a creeper into the group causing Scar's first death.</div>
-                    </div>
-                    <div class="extra content right aligned">
-                        Spring 2021
-                    </div>
-                </a>
-            
-                <a class="ui raised yellow hidden card" href="https://mhogar.itch.io/cube-robots-in-space" target="_blank" data-category="games">
-                    <div class="image">
-                        <img src="imgs/cube_robots_thumbnail.png">
-                    </div>
-                    <div class="content">
-                        <div class="header">Cube Robots... in Space!!!</div>
-                        <div class="description">Created for the GMTK Game Jam 2021, this is a simple puzzle game where you play as an adorable cube robot trying to destroy all platforms in the level. It placed in the top 16% of near 6000 entries.</div>
-                    </div>
-                    <div class="extra content right aligned">
-                        Summer 2021
-                    </div>
-                </a>
-            
-                <a class="ui raised purple hidden card" href="https://github.com/mhogar/SlimeFarm" target="_blank" data-category="projects">
-                    <div class="image">
-                        <img src="imgs/slime_farm_thumbnail.png">
-                    </div>
-                    <div class="content">
-                        <div class="header">Slime Farm</div>
-                        <div class="description">Slime Farm is an evolution simulator. Completed as a university individual course of study, this application is an intuitive and user-friendly approach to genetic algorithms.</div>
-                    </div>
-                    <div class="extra content right aligned">
-                        Fall 2020
-                    </div>
-                </a>
-            
-                <a class="ui raised purple hidden card" href="https://github.com/mhogar/migrationrunner" target="_blank" data-category="projects">
-                    <div class="image">
-                        <img src="imgs/mr_thumbnail.png">
-                    </div>
-                    <div class="content">
-                        <div class="header">Migration Runner</div>
-                        <div class="description">Migration Runner is a Go library for managing and running database migrations. It is maintained by a continuous integration pipeline and boasts 100% test coverage.</div>
-                    </div>
-                    <div class="extra content right aligned">
-                        Summer 2020
-                    </div>
-                </a>
-            
-                <a class="ui raised blue hidden card" href="https://students-toolshed.herokuapp.com/" target="_blank" data-category="projects">
-                    <div class="image">
-                        <img src="imgs/st_thumbnail.png">
-                    </div>
-                    <div class="content">
-                        <div class="header">Student's Toolshed</div>
-                        <div class="description">Created using ruby-on-rails, Student's Toolshed is a collection of self-contained javascript applications. The apps themselves are small, useful tools targeted for use by university students.</div>
-                    </div>
-                    <div class="extra content right aligned">
-                        Winter 2019
-                    </div>
-                </a>
-            
-                <a class="ui raised purple hidden card" href="https://github.com/mhogar/StudyPresGenerator" target="_blank" data-category="projects">
-                    <div class="image">
-                        <img src="imgs/spg_thumbnail.png">
-                    </div>
-                    <div class="content">
-                        <div class="header">Study Pres Generator</div>
-                        <div class="description">Study Pres Generator is a simple command-line ruby application for creating flashcard study presentations. It takes a JSON file of questions and answers as input and uses LaTeX to create the presentation.</div>
-                    </div>
-                    <div class="extra content right aligned">
-                        Fall 2019
-                    </div>
-                </a>
-            
-                <a class="ui raised purple hidden card" href="https://github.com/mhogar/course-scheduler" target="_blank" data-category="projects">
-                    <div class="image">
-                        <img src="imgs/scheduler_thumbnail.png">
-                    </div>
-                    <div class="content">
-                        <div class="header">Course Scheduler</div>
-                        <div class="description">Course Scheduler is an application that generates all possible schedules given the timeslots for each course. It may look and feel like legacy software, but it gets the job done.</div>
-                    </div>
-                    <div class="extra content right aligned">
-                        Spring 2018
-                    </div>
-                </a>
-            
-            </div>
-        </div>
-        <div class="ui inverted vertical footer segment">
-            <div class="ui container">
-                <div class="ui stackable inverted divided equal height stackable grid">
-                    <div class="three wide column">
-                        <h4 class="ui inverted header">Other links</h4>
-                        <div class="ui inverted link list">
-                            <a class="item" href="https://www.linkedin.com/in/ryan-stamp-a91020152/">
-                                <i class="linkedin icon"></i> Linked-in
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+      </nav>
+    </header>
 
-    <script src="js/jquery-3.5.1.min.js"></script>
-    <script src="js/index.js"></script>
-</body>
+    <main>
+      <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="imgs/banner.png" />
 
+            <div class="container">
+              <div class="carousel-caption">
+                <h1>Code Projects</h1>
+                <p>Interesting, nerdy, and always open-source.</p>
+                <p><a class="btn btn-lg btn-primary" href="https://github.com/mhogar" target="_blank">
+                  View them on GitHub
+                </a></p>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
+
+            <div class="container">
+              <div class="carousel-caption">
+                <h1>Games</h1>
+                <p>Fun, creative, with little something for everyone.</p>
+                <p><a class="btn btn-lg btn-primary" href="https://mhogar.itch.io/" target="_blank">
+                  Play them on Itch.io
+                </a></p>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
+
+            <div class="container">
+              <div class="carousel-caption">
+                <h1>Animations</h1>
+                <p>Short, funny, and worth a watch.</p>
+                <p><a class="btn btn-lg btn-primary" href="https://www.youtube.com/channel/UC4TeW-oe79vNo5ewMXJvr4w" target="_blank">
+                  Watch them on YouTube
+                </a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+
+      <!-- Marketing messaging and featurettes
+      ================================================== -->
+      <!-- Wrap the rest of the page in another container to center all the content. -->
+
+      <div class="container marketing">
+        <!-- START THE FEATURETTES -->
+
+        <hr class="featurette-divider">
+
+        <div class="row featurette">
+          <div class="col-md-7">
+            <h2 class="featurette-heading">Hello everyone, <span class="text-muted">mhogar here!</span></h2>
+            <p class="lead">
+              Armed with a Bachelor of Computing, and pursing a Masters in Cybersecurity, I have a passion for programming and expressing myself creatively. I'll hope you'll join me on my quest to make the world a better place, one line of code at a time.
+            </p>
+          </div>
+          <div class="col-md-5">
+            <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text></svg>
+
+          </div>
+        </div>
+
+        <hr class="featurette-divider">
+
+        <div class="row featurette">
+          <div class="col-md-7 order-md-2" >
+            <h2 class="featurette-heading">
+              Check out the 
+              <span class="text-muted">Portfolio.</span>
+            </h2>
+            <p class="lead">
+              Want to know I've made, but don't want to sift through the internet? Me neither. Check out the portfolio for easy access to every project, game, and animation, all in one place.
+            </p>
+          </div>
+          <div class="col-md-5 order-md-1">
+            <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text></svg>
+
+          </div>
+        </div>
+
+        <hr class="featurette-divider">
+
+        <div class="row featurette">
+          <div class="col-md-7">
+            <h2 class="featurette-heading">
+              Read the 
+              <span class="text-muted">Blog.</span>
+            </h2>
+            <p class="lead">
+              Want to know what's on my mind? The blog is the best place for development updates, project retrospectives, and just general (and sometimes random) thoughts about life.
+            </p>
+          </div>
+          <div class="col-md-5">
+            <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text></svg>
+
+          </div>
+        </div>
+
+        <hr class="featurette-divider">
+
+        <!-- /END THE FEATURETTES -->
+
+      </div><!-- /.container -->
+
+      <!-- FOOTER -->
+      <footer class="container footer">
+        <p class="float-end"><a href="#">Back to top</a></p>
+        <h6>Contact Sources</h6>
+        <ul>
+          <li>
+            <a href="https://www.linkedin.com/in/ryan-stamp-a91020152/">Linked In</a>
+          </li>
+        </ul>
+      </footer>
+    </main>
+
+    <script src="./js/bootstrap.min.js"></script>
+  </body>
 </html>
