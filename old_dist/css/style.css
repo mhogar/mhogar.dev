@@ -1,0 +1,89 @@
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: grayscale;
+  background-color: #eee;
+}
+
+.ui.stackable.cards > .hidden.card {
+  display: none !important;
+}
+
+.header-link.button {
+  margin-bottom: 0.5em;
+}
+
+.wrapper.segment {
+  max-width: 1680px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0;
+  padding: 0;
+  background-color: #fff;
+}
+
+#content-menu {
+  margin-top: 1em;
+}
+
+#content-cards {
+  margin-top: 2em;
+  margin-bottom: 5em;
+}
+
+.masthead.segment {
+  min-height: 600px;
+  padding: 1em 0em;
+}
+
+.masthead.segment.inverted {
+  background-image: url(../imgs/banner.png);
+  background-attachment: fixed;
+  background-position-x: center;
+  background-position-y: top;
+}
+
+.masthead h1.ui.header {
+  margin-top: 3em;
+  margin-bottom: 0em;
+  font-size: 3em;
+  font-weight: normal;
+  padding-bottom: 0.5em;
+}
+
+.masthead h2 {
+  font-size: 1.7em;
+  font-weight: normal;
+  margin-bottom: 1em;
+}
+
+.ui.vertical.stripe {
+  padding: 8em 0em;
+}
+
+.ui.vertical.stripe h3 {
+  font-size: 2em;
+}
+
+.ui.vertical.stripe p {
+  font-size: 1.33em;
+}
+
+.footer.segment {
+  padding: 5em 0em;
+}
+
+@media only screen and (max-width: 700px) {
+  .masthead.segment {
+    min-height: 450px;
+  }
+
+  .masthead h1.ui.header {
+    font-size: 2em;
+    margin-top: 1.5em;
+  }
+
+  .masthead h2 {
+    margin-top: 0.5em;
+    font-size: 1.5em;
+  }
+}
