@@ -19,6 +19,15 @@
     </div>
   </nav>
   <router-view />
+  <footer class="container footer">
+    <p class="float-end"><a href="#">Back to top</a></p>
+    <h6>Contact Sources</h6>
+    <ul>
+      <li>
+        <a href="https://www.linkedin.com/in/ryan-stamp-a91020152/">Linked In</a>
+      </li>
+    </ul>
+  </footer>
 </template>
 
 <style>

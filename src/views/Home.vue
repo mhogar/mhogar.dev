@@ -1,5 +1,5 @@
 <template>
-  <Carousel :id="categoryCarousel" :slides="carouselSlides" />
+  <Carousel :id="'categoryCarousel'" :slides="carouselSlides" />
   <Featurettes :content="featurettesContent" />
 </template>
 
