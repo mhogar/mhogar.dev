@@ -1,6 +1,8 @@
 <template>
   <Carousel :id="'categoryCarousel'" :slides="carouselSlides" />
-  <Featurettes :content="featurettesContent" />
+  <div class="container">
+    <Featurettes :content="featurettesContent" />
+  </div>
 </template>
 
 <style scoped>
