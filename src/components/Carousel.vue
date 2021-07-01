@@ -9,11 +9,11 @@
 
         <div class="container">
           <div class="carousel-caption">
-            <h1>{{ slide.title }}</h1>
-            <p>{{ slide.description }}</p>
+            <h1>{{slide.title}}</h1>
+            <p>{{slide.description}}</p>
             <p>
               <a class="btn btn-lg btn-primary" :href="slide.buttonLink.url" target="_blank">
-                {{ slide.buttonLink.text }}
+                {{slide.buttonLink.text}}
               </a>
             </p>
           </div>
@@ -33,10 +33,6 @@
 
 <style scoped>
 
-/* Carousel base class */
-.carousel {
-  margin-bottom: 4rem;
-}
 /* Since positioning the image, we need to help out the caption */
 .carousel-caption {
   bottom: 8rem;
@@ -55,14 +51,24 @@
   /*height: 32rem;*/
 }
 
+@media (min-width: 40em) {
+  /* Bump up size of carousel content */
+  .carousel-caption p {
+    margin-bottom: 1.25rem;
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
+
 </style>
 
 <script lang="ts">
+
 import { PropType } from '@vue/runtime-core'
 import { Options, Vue } from 'vue-class-component'
 import Link from '../common/Link'
 
-export interface Slide {
+export interface CarouselSlide {
   title: string,
   description: string,
   image: string,
@@ -71,11 +77,13 @@ export interface Slide {
 
 @Options({
   props: {
-    slides: Array as PropType<Slide[]>
+    id: String,
+    slides: Array as PropType<CarouselSlide[]>
   }
 })
 export default class Carousel extends Vue {
-  slides!: Slide[]
+  id!: string
+  slides!: CarouselSlide[]
 
   firstItemActive (index: number): string {
     return index === 0 ? 'active' : ''

@@ -1,20 +1,28 @@
 <template>
-  <div class="home">
-    <Carousel :slides="carouselSlides" />
-  </div>
+  <Carousel :id="categoryCarousel" :slides="carouselSlides" />
+  <Featurettes :content="featurettesContent" />
 </template>
+
+<style scoped>
+
+.carousel {
+  margin-bottom: 4rem;
+}
+
+</style>
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component'
-import Carousel, { Slide } from '../components/Carousel.vue'
+import Carousel, { CarouselSlide } from '../components/Carousel.vue'
+import Featurettes, { FeaturetteContent } from '../components/Featurettes.vue'
 
 @Options({
   components: {
-    Carousel
+    Carousel, Featurettes
   }
 })
 export default class Home extends Vue {
-  carouselSlides: Slide[] = [
+  carouselSlides: CarouselSlide[] = [
     {
       title: 'Code Projects',
       description: 'Interesting, nerdy, and always open-source.',
@@ -41,6 +49,24 @@ export default class Home extends Vue {
         text: 'Watch them on YouTube',
         url: 'https://www.youtube.com/channel/UC4TeW-oe79vNo5ewMXJvr4w'
       }
+    }
+  ]
+
+  featurettesContent: FeaturetteContent[] = [
+    {
+      heading: 'Hello everyone,',
+      subheading: 'mhogar here!',
+      lead: "Armed with a Bachelor of Computing, and pursing a Masters in Cybersecurity, I have a passion for programming and expressing myself creatively. I'll hope you'll join me on my quest to make the world a better place, one line of code at a time."
+    },
+    {
+      heading: 'Check out the',
+      subheading: 'Portfolio.',
+      lead: "Want to know I've made, but don't want to sift through the internet? Me neither. Check out the portfolio for easy access to every project, game, and animation, all in one place."
+    },
+    {
+      heading: 'Read the',
+      subheading: 'Blog.',
+      lead: "Want to know what's on my mind? The blog is the best place for development updates, project retrospectives, and just general (and sometimes random) thoughts about life."
     }
   ]
 }
