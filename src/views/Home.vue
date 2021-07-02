@@ -1,7 +1,9 @@
 <template>
-  <Carousel :id="'categoryCarousel'" :imageDir="'home/'" :slides="carouselSlides" />
-  <div class="container">
-    <Featurettes :content="featurettesContent" />
+  <div>
+    <Carousel :id="'categoryCarousel'" :imageDir="'home/'" :slides="carouselSlides" />
+    <div class="container">
+      <Featurettes :content="featurettesContent" />
+    </div>
   </div>
 </template>
 
@@ -14,6 +16,7 @@
 </style>
 
 <script lang="ts">
+
 import { Options, Vue } from 'vue-class-component'
 import Carousel, { CarouselSlide } from '../components/Carousel.vue'
 import Featurettes, { FeaturetteContent } from '../components/Featurettes.vue'
@@ -32,4 +35,5 @@ export default class Home extends Vue {
   carouselSlides: CarouselSlide[] = carouselSlides
   featurettesContent: FeaturetteContent[] = featurettesContent
 }
+
 </script>

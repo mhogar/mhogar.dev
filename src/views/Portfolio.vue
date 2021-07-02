@@ -1,28 +1,30 @@
 <template>
-  <section class="py-5 text-center container">
-    <div class="row py-lg-5">
-      <div class="col-lg-6 col-md-8 mx-auto">
-        <h1 class="fw-light">Project Portfolio</h1>
-        <p class="lead text-muted">This is a collection of every project, game, and animation I think are worth sharing.</p>
+  <div>
+    <section class="py-5 text-center container">
+      <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+          <h1 class="fw-light">Project Portfolio</h1>
+          <p class="lead text-muted">This is a collection of every project, game, and animation I think are worth sharing.</p>
+        </div>
       </div>
-    </div>
-  </section>
-  <div class="album py-5 bg-light">
-    <div class="container">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-        <div v-for="card in cards" :key="card.title" class="col">
-          <div class="card shadow-sm">
-            <img :src="loadThumbnail(card.thumbnail)" />
-            <div class="card-body">
-              <h5 class="card-title">{{card.title}}</h5>
-              <p class="card-text">{{card.description}}</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <a v-for="link in card.buttonLinks" :key="link.url" class="btn btn-sm btn-outline-secondary" :href="link.url" target="_blank">
-                    {{link.text}}
-                  </a>
+    </section>
+    <div class="album py-5 bg-light">
+      <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+          <div v-for="card in cards" :key="card.title" class="col">
+            <div class="card shadow-sm">
+              <img :src="loadThumbnail(card.thumbnail)" />
+              <div class="card-body">
+                <h5 class="card-title">{{card.title}}</h5>
+                <p class="card-text">{{card.description}}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <a v-for="link in card.buttonLinks" :key="link.url" class="btn btn-sm btn-outline-secondary" :href="link.url" target="_blank">
+                      {{link.text}}
+                    </a>
+                  </div>
+                  <small class="text-muted">{{card.date}}</small>
                 </div>
-                <small class="text-muted">{{card.date}}</small>
               </div>
             </div>
           </div>

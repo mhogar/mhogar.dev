@@ -18,7 +18,13 @@
       </div>
     </div>
   </nav>
-  <router-view />
+  <router-view v-slot="{ Component }">
+    <transition enter-active-class="animate__animated animate__faster animate__fadeIn"
+                leave-active-class="animate__animated animate__faster animate__fadeOut"
+                mode="out-in">
+      <component :is="Component" />
+    </transition>
+  </router-view>
   <footer class="container footer">
     <p class="float-end"><a href="#">Back to top</a></p>
     <h6>Contact Sources</h6>
