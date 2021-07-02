@@ -7,11 +7,23 @@
           <p class="lead text-muted">This is a collection of every project, game, and animation I think are worth sharing.</p>
         </div>
       </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" v-model="filters.includeProjects">
+        <label class="form-check-label">Code Projects</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" v-model="filters.includeGames">
+        <label class="form-check-label">Games</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" v-model="filters.includeAnimations">
+        <label class="form-check-label">Animations</label>
+      </div>
     </section>
     <div class="album py-5 bg-light">
       <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-          <div v-for="card in cards" :key="card.title" class="col">
+          <div v-for="card in filteredCards()" :key="card.title" class="col">
             <div class="card shadow-sm">
               <img :src="loadThumbnail(card.thumbnail)" />
               <div class="card-body">
@@ -58,16 +70,54 @@ import cards from '@/assets/portfolio/cards.json'
 export interface PortfolioCard {
   title: string,
   description: string,
+  category: string,
   date: string,
   thumbnail: string,
   buttonLinks: Link[]
 }
 
+interface Filters {
+  includeProjects: boolean,
+  includeGames: boolean,
+  includeAnimations: boolean
+}
+
 export default class Portfolio extends Vue {
   cards: PortfolioCard[] = cards
+  filters: Filters = {
+    includeProjects: true,
+    includeGames: true,
+    includeAnimations: true
+  }
 
   loadThumbnail (thumbnail: string): string {
     return require('@/assets/portfolio/thumbnails/' + thumbnail)
+  }
+
+  filteredCards (): PortfolioCard[] {
+    const filteredCards: PortfolioCard[] = []
+
+    this.cards.forEach((card: PortfolioCard) => {
+      if (this.shouldShowCard(card)) {
+        filteredCards.push(card)
+      }
+    })
+
+    return filteredCards
+  }
+
+  shouldShowCard (card: PortfolioCard): boolean {
+    if (card.category === 'projects' && !this.filters.includeProjects) {
+      return false
+    }
+    if (card.category === 'games' && !this.filters.includeGames) {
+      return false
+    }
+    if (card.category === 'animations' && !this.filters.includeAnimations) {
+      return false
+    }
+
+    return true
   }
 }
 
