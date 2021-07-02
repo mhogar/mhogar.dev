@@ -12,9 +12,7 @@
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         <div v-for="card in cards" :key="card.title" class="col">
           <div class="card shadow-sm">
-            <!-- <img src="../imgs/slime_farm_thumbnail.png" width="100%" height="225" /> -->
-            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-
+            <img :src="loadThumbnail(card.thumbnail)" />
             <div class="card-body">
               <h5 class="card-title">{{card.title}}</h5>
               <p class="card-text">{{card.description}}</p>
@@ -34,6 +32,19 @@
   </div>
 </template>
 
+<style scoped>
+
+.album {
+  margin-bottom: 3rem;
+}
+
+.card > img {
+  width: 100%;
+  height: 225px;
+}
+
+</style>
+
 <script lang="ts">
 
 import { Vue } from 'vue-class-component'
@@ -43,6 +54,7 @@ export interface PortfolioCard {
   title: string,
   description: string,
   date: string,
+  thumbnail: string,
   buttonLinks: Link[]
 }
 
@@ -52,6 +64,7 @@ export default class Portfolio extends Vue {
       title: 'Slime Farm',
       description: 'Slime Farm is an evolution simulator. Completed as a university individual course of study, this application is an intuitive and user-friendly approach to genetic algorithms.',
       date: 'Fall 2020',
+      thumbnail: 'slime_farm.png',
       buttonLinks: [
         {
           text: 'View on GitHub',
@@ -60,6 +73,10 @@ export default class Portfolio extends Vue {
       ]
     }
   ]
+
+  loadThumbnail (thumbnail: string): string {
+    return require('@/assets/portfolio/thumbnails/' + thumbnail)
+  }
 }
 
 </script>

@@ -5,7 +5,7 @@
     </div>
     <div class="carousel-inner">
       <div v-for="(slide, index) in slides" :key="slide.title" :class="'carousel-item ' + firstItemActive(index)">
-        <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
+        <img :src="loadImage(slide.image)" />
 
         <div class="container">
           <div class="carousel-caption">
@@ -87,6 +87,10 @@ export default class Carousel extends Vue {
 
   firstItemActive (index: number): string {
     return index === 0 ? 'active' : ''
+  }
+
+  loadImage (image: string): string {
+    return require('@/assets/' + image)
   }
 }
 

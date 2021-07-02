@@ -28,7 +28,7 @@ export default class Home extends Vue {
     {
       title: 'Code Projects',
       description: 'Interesting, nerdy, and always open-source.',
-      image: 'banner.png',
+      image: 'home/banner1.png',
       buttonLink: {
         text: 'View them on GitHub',
         url: 'https://github.com/mhogar'
@@ -37,7 +37,7 @@ export default class Home extends Vue {
     {
       title: 'Games',
       description: 'Fun, creative, with little something for everyone.',
-      image: '',
+      image: 'home/banner1.png',
       buttonLink: {
         text: 'Play them on Itch.io',
         url: 'https://mhogar.itch.io/'
@@ -46,7 +46,7 @@ export default class Home extends Vue {
     {
       title: 'Animations',
       description: 'Short, funny, and worth a watch.',
-      image: '',
+      image: 'home/banner1.png',
       buttonLink: {
         text: 'Watch them on YouTube',
         url: 'https://www.youtube.com/channel/UC4TeW-oe79vNo5ewMXJvr4w'
