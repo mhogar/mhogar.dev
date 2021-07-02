@@ -78,11 +78,13 @@ export interface CarouselSlide {
 @Options({
   props: {
     id: String,
+    imageDir: String,
     slides: Array as PropType<CarouselSlide[]>
   }
 })
 export default class Carousel extends Vue {
   id!: string
+  imageDir!: string
   slides!: CarouselSlide[]
 
   firstItemActive (index: number): string {
@@ -90,7 +92,7 @@ export default class Carousel extends Vue {
   }
 
   loadImage (image: string): string {
-    return require('@/assets/' + image)
+    return require('@/assets/' + this.imageDir + image)
   }
 }
 

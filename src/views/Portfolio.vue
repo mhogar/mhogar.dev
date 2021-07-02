@@ -50,6 +50,9 @@
 import { Vue } from 'vue-class-component'
 import Link from '../common/Link'
 
+// @ts-ignore
+import cards from '@/assets/portfolio/cards.json'
+
 export interface PortfolioCard {
   title: string,
   description: string,
@@ -59,20 +62,7 @@ export interface PortfolioCard {
 }
 
 export default class Portfolio extends Vue {
-  cards: PortfolioCard[] = [
-    {
-      title: 'Slime Farm',
-      description: 'Slime Farm is an evolution simulator. Completed as a university individual course of study, this application is an intuitive and user-friendly approach to genetic algorithms.',
-      date: 'Fall 2020',
-      thumbnail: 'slime_farm.png',
-      buttonLinks: [
-        {
-          text: 'View on GitHub',
-          url: 'https://github.com/mhogar/SlimeFarm'
-        }
-      ]
-    }
-  ]
+  cards: PortfolioCard[] = cards
 
   loadThumbnail (thumbnail: string): string {
     return require('@/assets/portfolio/thumbnails/' + thumbnail)
