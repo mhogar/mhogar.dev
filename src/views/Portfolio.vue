@@ -23,14 +23,14 @@
         <div class="input-group justify-content-center" role="group">
           <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Order by {{filters.order}}</button>
           <ul class="dropdown-menu">
-            <li><button class="dropdown-item" v-on:click="filters.order = 'Relevance'">Relevance</button></li>
-            <li><button class="dropdown-item" v-on:click="filters.order = 'Name'">Name</button></li>
-            <li><button class="dropdown-item" v-on:click="filters.order = 'Date'">Date</button></li>
+            <li><button class="dropdown-item" v-on:click="updateFiltersOrder('Relevance')">Relevance</button></li>
+            <li><button class="dropdown-item" v-on:click="updateFiltersOrder('Name')">Name</button></li>
+            <li><button class="dropdown-item" v-on:click="updateFiltersOrder('Date')">Date</button></li>
           </ul>
-          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">{{filters.orderDirection === 1 ? 'Ascending' : 'Descending'}}</button>
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">{{orderDirectionDisplayText(filters.orderDirection)}}</button>
           <ul class="dropdown-menu">
-            <li><button class="dropdown-item" v-on:click="filters.orderDirection = 1">Ascending</button></li>
-            <li><button class="dropdown-item" v-on:click="filters.orderDirection = -1">Descending</button></li>
+            <li><button class="dropdown-item" v-on:click="filters.orderDirection = 1">{{orderDirectionDisplayText(1)}}</button></li>
+            <li><button class="dropdown-item" v-on:click="filters.orderDirection = -1">{{orderDirectionDisplayText(-1)}}</button></li>
           </ul>
         </div>
       </div>
@@ -80,7 +80,7 @@
 
 <script lang="ts">
 
-import { Vue } from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 import Link from '../common/Link'
 
 // @ts-ignore
@@ -96,14 +96,27 @@ export interface PortfolioCard {
   buttonLinks: Link[]
 }
 
+type OrderType = 'Relevance' | 'Name' | 'Date'
+type OrderDirectionType = 1 | -1
+
 interface Filters {
   includeProjects: boolean,
   includeGames: boolean,
   includeAnimations: boolean
-  order: 'Relevance' | 'Name' | 'Date',
-  orderDirection: 1 | -1
+  order: OrderType,
+  orderDirection: OrderDirectionType
 }
 
+@Options({
+  watch: {
+    filters: {
+      deep: true,
+      handler: function (oldValue, newValue) {
+        this.updateFiltersParams()
+      }
+    }
+  }
+})
 export default class Portfolio extends Vue {
   cards: PortfolioCard[] = cards
   filters: Filters = {
@@ -114,8 +127,18 @@ export default class Portfolio extends Vue {
     orderDirection: 1
   }
 
+  created () {
+    this.loadFiltersFromParams()
+    this.updateFiltersParams()
+  }
+
   loadThumbnail (thumbnail: string): string {
     return require('@/assets/portfolio/thumbnails/' + thumbnail)
+  }
+
+  updateFiltersOrder (order: OrderType) {
+    this.filters.order = order
+    this.filters.orderDirection = 1
   }
 
   dateDisplayText (date: string): string {
@@ -135,6 +158,24 @@ export default class Portfolio extends Vue {
     return 'Fall ' + year
   }
 
+  orderDirectionDisplayText (dir: OrderDirectionType): string {
+    if (dir === 1) {
+      if (this.filters.order === 'Relevance') {
+        return 'Most'
+      } else if (this.filters.order === 'Date') {
+        return 'Newest'
+      }
+      return 'Ascending'
+    }
+
+    if (this.filters.order === 'Relevance') {
+      return 'Least'
+    } else if (this.filters.order === 'Date') {
+      return 'Oldest'
+    }
+    return 'Descending'
+  }
+
   filteredCards (): PortfolioCard[] {
     const filteredCards: PortfolioCard[] = []
 
@@ -148,7 +189,7 @@ export default class Portfolio extends Vue {
       return filteredCards.sort((a, b) => this.filters.orderDirection * this.stringCompareCaseInsensitive(a.title, b.title))
     }
     if (this.filters.order === 'Date') {
-      return filteredCards.sort((a, b) => this.filters.orderDirection * this.stringCompare(a.date, b.date))
+      return filteredCards.sort((a, b) => -this.filters.orderDirection * this.stringCompare(a.date, b.date))
     }
     // relevance
     return filteredCards.sort((a, b) => this.filters.orderDirection * (a.relevance - b.relevance))
@@ -180,6 +221,42 @@ export default class Portfolio extends Vue {
 
   stringCompareCaseInsensitive (a: string, b: string): number {
     return this.stringCompare(a.toLowerCase(), b.toLowerCase())
+  }
+
+  loadFiltersFromParams () {
+    const params = new URL(window.location.href).searchParams
+
+    const projectParam = params.get('projects')
+    if (projectParam) {
+      this.filters.includeProjects = projectParam === 'true'
+    }
+    const gamesParam = params.get('games')
+    if (gamesParam) {
+      this.filters.includeGames = gamesParam === 'true'
+    }
+    const animationsParam = params.get('animations')
+    if (animationsParam) {
+      this.filters.includeAnimations = animationsParam === 'true'
+    }
+    const orderParam = params.get('order') as OrderType
+    if (orderParam === 'Relevance' || orderParam === 'Name' || orderParam === 'Date') {
+      this.filters.order = orderParam
+    }
+    const orderDirectionParam = parseInt(params.get('orderDirection') ?? '') as OrderDirectionType
+    if (orderDirectionParam === 1 || orderDirectionParam === -1) {
+      this.filters.orderDirection = orderDirectionParam
+    }
+  }
+
+  updateFiltersParams () {
+    const url = new URL(window.location.href)
+    url.searchParams.set('projects', this.filters.includeProjects.toString())
+    url.searchParams.set('games', this.filters.includeGames.toString())
+    url.searchParams.set('animations', this.filters.includeAnimations.toString())
+    url.searchParams.set('order', this.filters.order)
+    url.searchParams.set('orderDirection', this.filters.orderDirection.toString())
+
+    window.history.replaceState(null, '', url.href)
   }
 }
 
