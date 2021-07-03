@@ -112,7 +112,9 @@ interface Filters {
     categories: {
       deep: true,
       handler: function (oldValue, newValue) {
-        this.updateFiltersParams()
+        if (this.categoriesInitialized) {
+          this.updateFiltersParams()
+        }
       }
     }
   }
@@ -121,6 +123,7 @@ export default class Portfolio extends Vue {
   cards: PortfolioCard[] = cards
 
   categories: Map<string, CategoryData> = new Map<string, CategoryData>()
+  categoriesInitialized: boolean = false
 
   filters: Filters = {
     order: 'Relevance',
@@ -129,6 +132,8 @@ export default class Portfolio extends Vue {
 
   created () {
     this.initCategories()
+    this.categoriesInitialized = true
+
     this.loadFiltersFromParams()
     this.updateFiltersParams()
   }
