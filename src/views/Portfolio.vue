@@ -19,6 +19,21 @@
         <input class="form-check-input" type="checkbox" v-model="filters.includeAnimations">
         <label class="form-check-label">Animations</label>
       </div>
+      <div class="row order-dropdowns">
+        <div class="input-group justify-content-center" role="group">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Order by {{filters.order}}</button>
+          <ul class="dropdown-menu">
+            <li><button class="dropdown-item" v-on:click="filters.order = 'Relevance'">Relevance</button></li>
+            <li><button class="dropdown-item" v-on:click="filters.order = 'Name'">Name</button></li>
+            <li><button class="dropdown-item" v-on:click="filters.order = 'Date'">Date</button></li>
+          </ul>
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">{{filters.orderDirection === 1 ? 'Ascending' : 'Descending'}}</button>
+          <ul class="dropdown-menu">
+            <li><button class="dropdown-item" v-on:click="filters.orderDirection = 1">Ascending</button></li>
+            <li><button class="dropdown-item" v-on:click="filters.orderDirection = -1">Descending</button></li>
+          </ul>
+        </div>
+      </div>
     </section>
     <div class="album py-5 bg-light">
       <div class="container">
@@ -35,7 +50,7 @@
                       {{link.text}}
                     </a>
                   </div>
-                  <small class="text-muted">{{card.date}}</small>
+                  <small class="text-muted">{{dateDisplayText(card.date)}}</small>
                 </div>
               </div>
             </div>
@@ -47,6 +62,10 @@
 </template>
 
 <style scoped>
+
+.order-dropdowns {
+  margin-top: 1rem;
+}
 
 .album {
   margin-bottom: 3rem;
@@ -72,6 +91,7 @@ export interface PortfolioCard {
   description: string,
   category: string,
   date: string,
+  relevance: number,
   thumbnail: string,
   buttonLinks: Link[]
 }
@@ -80,6 +100,8 @@ interface Filters {
   includeProjects: boolean,
   includeGames: boolean,
   includeAnimations: boolean
+  order: 'Relevance' | 'Name' | 'Date',
+  orderDirection: 1 | -1
 }
 
 export default class Portfolio extends Vue {
@@ -87,11 +109,30 @@ export default class Portfolio extends Vue {
   filters: Filters = {
     includeProjects: true,
     includeGames: true,
-    includeAnimations: true
+    includeAnimations: true,
+    order: 'Relevance',
+    orderDirection: 1
   }
 
   loadThumbnail (thumbnail: string): string {
     return require('@/assets/portfolio/thumbnails/' + thumbnail)
+  }
+
+  dateDisplayText (date: string): string {
+    const tokens = date.split('-')
+    const year = tokens[0]
+    const month = parseInt(tokens[1])
+
+    if (month < 4) {
+      return 'Winter ' + year
+    }
+    if (month < 7) {
+      return 'Spring ' + year
+    }
+    if (month < 10) {
+      return 'Summer ' + year
+    }
+    return 'Fall ' + year
   }
 
   filteredCards (): PortfolioCard[] {
@@ -103,7 +144,14 @@ export default class Portfolio extends Vue {
       }
     })
 
-    return filteredCards
+    if (this.filters.order === 'Name') {
+      return filteredCards.sort((a, b) => this.filters.orderDirection * this.stringCompareCaseInsensitive(a.title, b.title))
+    }
+    if (this.filters.order === 'Date') {
+      return filteredCards.sort((a, b) => this.filters.orderDirection * this.stringCompare(a.date, b.date))
+    }
+    // relevance
+    return filteredCards.sort((a, b) => this.filters.orderDirection * (a.relevance - b.relevance))
   }
 
   shouldShowCard (card: PortfolioCard): boolean {
@@ -118,6 +166,20 @@ export default class Portfolio extends Vue {
     }
 
     return true
+  }
+
+  stringCompare (a: string, b: string): number {
+    if (a < b) {
+      return -1
+    }
+    if (a > b) {
+      return 1
+    }
+    return 0
+  }
+
+  stringCompareCaseInsensitive (a: string, b: string): number {
+    return this.stringCompare(a.toLowerCase(), b.toLowerCase())
   }
 }
 

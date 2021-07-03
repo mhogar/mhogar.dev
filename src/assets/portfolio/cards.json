@@ -3,7 +3,8 @@
     "title": "Slime Farm",
     "description": "Slime Farm is an evolution simulator. Completed as a university individual course of study, this application is an intuitive and user-friendly approach to genetic algorithms.",
     "category": "projects",
-    "date": "Fall 2020",
+    "date": "2020-12",
+    "relevance": 0,
     "thumbnail": "slime_farm.png",
     "buttonLinks": [
       {
@@ -16,7 +17,8 @@
     "title": "Student's Toolshed",
     "description": "Created using ruby-on-rails, Student's Toolshed is a collection of self-contained javascript applications. The apps themselves are small, useful tools targeted for use by university students.",
     "category": "projects",
-    "date": "Winter 2019",
+    "date": "2019-01",
+    "relevance": 40,
     "thumbnail": "students_toolshed.png",
     "buttonLinks": [
       {
@@ -33,7 +35,8 @@
     "title": "Course Scheduler",
     "description": "Course Scheduler is an application that generates all possible schedules given the timeslots for each course. It may look and feel like legacy software, but it gets the job done.",
     "category": "projects",
-    "date": "Spring 2018",
+    "date": "2018-04",
+    "relevance": 60,
     "thumbnail": "scheduler.png",
     "buttonLinks": [
       {
@@ -46,7 +49,8 @@
     "title": "Study Pres Generator",
     "description": "Study Pres Generator is a simple command-line ruby application for creating flashcard study presentations. It parses the input from a JSON file and uses LaTeX to create the presentation.",
     "category": "projects",
-    "date": "Fall 2019",
+    "date": "2019-10",
+    "relevance": 50,
     "thumbnail": "study_pres_gen.png",
     "buttonLinks": [
       {
@@ -59,7 +63,8 @@
     "title": "Migration Runner",
     "description": "Migration Runner is a Go library for managing and running database migrations. It is maintained by a continuous integration pipeline and boasts 100% test coverage.",
     "category": "projects",
-    "date": "Summer 2020",
+    "date": "2020-07",
+    "relevance": 30,
     "thumbnail": "migration_runner.png",
     "buttonLinks": [
       {
@@ -72,7 +77,8 @@
     "title": "Cube Robots... in Space!!!",
     "category": "games",
     "description": "Created for the GMTK Game Jam 2021, this is a simple puzzle game where you play as an adorable cube robot trying to destroy all platforms in the level. It placed in the top 16% of near 6000 entries.",
-    "date": "Summer 2021",
+    "date": "2021-06",
+    "relevance": 10,
     "thumbnail": "cube_robots.png",
     "buttonLinks": [
       {
@@ -85,7 +91,8 @@
     "title": "The Creeper Whisperer",
     "category": "animations",
     "description": "The Creeper Whisperer is a Minecraft animation of a scene from the 3rd Life YouTube series. In this animation, Grian lures a creeper into the group causing Scar's first death.",
-    "date": "Spring 2021",
+    "date": "2021-05",
+    "relevance": 20,
     "thumbnail": "creeper_whisper.jpg",
     "buttonLinks": [
       {

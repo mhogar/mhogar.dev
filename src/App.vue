@@ -12,7 +12,7 @@
             <router-link to="/portfolio" class="nav-link">Portfolio</router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/blog" class="nav-link">Blog</router-link>
+            <router-link to="/blog" class="nav-link disabled">Blog</router-link>
           </li>
         </ul>
       </div>
