@@ -7,17 +7,9 @@
           <p class="lead text-muted">This is a collection of every project, game, and animation I think are worth sharing.</p>
         </div>
       </div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" v-model="filters.includeProjects">
-        <label class="form-check-label">Code Projects</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" v-model="filters.includeGames">
-        <label class="form-check-label">Games</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" v-model="filters.includeAnimations">
-        <label class="form-check-label">Animations</label>
+      <div v-for="kv in categories" :key="kv[0]" class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" v-model="kv[1].include">
+        <label class="form-check-label">{{capitalize(kv[0])}} ({{kv[1].count}})</label>
       </div>
       <div class="row order-dropdowns">
         <div class="input-group justify-content-center" role="group">
@@ -96,13 +88,15 @@ export interface PortfolioCard {
   buttonLinks: Link[]
 }
 
+interface CategoryData {
+  count: number,
+  include: boolean
+}
+
 type OrderType = 'Relevance' | 'Name' | 'Date'
 type OrderDirectionType = 1 | -1
 
 interface Filters {
-  includeProjects: boolean,
-  includeGames: boolean,
-  includeAnimations: boolean
   order: OrderType,
   orderDirection: OrderDirectionType
 }
@@ -114,20 +108,27 @@ interface Filters {
       handler: function (oldValue, newValue) {
         this.updateFiltersParams()
       }
+    },
+    categories: {
+      deep: true,
+      handler: function (oldValue, newValue) {
+        this.updateFiltersParams()
+      }
     }
   }
 })
 export default class Portfolio extends Vue {
   cards: PortfolioCard[] = cards
+
+  categories: Map<string, CategoryData> = new Map<string, CategoryData>()
+
   filters: Filters = {
-    includeProjects: true,
-    includeGames: true,
-    includeAnimations: true,
     order: 'Relevance',
     orderDirection: 1
   }
 
   created () {
+    this.initCategories()
     this.loadFiltersFromParams()
     this.updateFiltersParams()
   }
@@ -139,6 +140,10 @@ export default class Portfolio extends Vue {
   updateFiltersOrder (order: OrderType) {
     this.filters.order = order
     this.filters.orderDirection = 1
+  }
+
+  capitalize (str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1)
   }
 
   dateDisplayText (date: string): string {
@@ -180,7 +185,7 @@ export default class Portfolio extends Vue {
     const filteredCards: PortfolioCard[] = []
 
     this.cards.forEach((card: PortfolioCard) => {
-      if (this.shouldShowCard(card)) {
+      if (this.categories.get(card.category)?.include) {
         filteredCards.push(card)
       }
     })
@@ -193,20 +198,6 @@ export default class Portfolio extends Vue {
     }
     // relevance
     return filteredCards.sort((a, b) => this.filters.orderDirection * (a.relevance - b.relevance))
-  }
-
-  shouldShowCard (card: PortfolioCard): boolean {
-    if (card.category === 'projects' && !this.filters.includeProjects) {
-      return false
-    }
-    if (card.category === 'games' && !this.filters.includeGames) {
-      return false
-    }
-    if (card.category === 'animations' && !this.filters.includeAnimations) {
-      return false
-    }
-
-    return true
   }
 
   stringCompare (a: string, b: string): number {
@@ -223,25 +214,38 @@ export default class Portfolio extends Vue {
     return this.stringCompare(a.toLowerCase(), b.toLowerCase())
   }
 
+  initCategories () {
+    this.categories.clear()
+
+    this.cards.forEach((card: PortfolioCard) => {
+      const data = this.categories.get(card.category)
+
+      if (!data) {
+        this.categories.set(card.category, {
+          count: 1,
+          include: true
+        })
+      } else {
+        data.count += 1
+      }
+    })
+  }
+
   loadFiltersFromParams () {
     const params = new URL(window.location.href).searchParams
 
-    const projectParam = params.get('projects')
-    if (projectParam) {
-      this.filters.includeProjects = projectParam === 'true'
-    }
-    const gamesParam = params.get('games')
-    if (gamesParam) {
-      this.filters.includeGames = gamesParam === 'true'
-    }
-    const animationsParam = params.get('animations')
-    if (animationsParam) {
-      this.filters.includeAnimations = animationsParam === 'true'
-    }
+    this.categories.forEach((value, key) => {
+      const param = params.get(key)
+      if (param) {
+        value.include = param === 'true'
+      }
+    })
+
     const orderParam = params.get('order') as OrderType
     if (orderParam === 'Relevance' || orderParam === 'Name' || orderParam === 'Date') {
       this.filters.order = orderParam
     }
+
     const orderDirectionParam = parseInt(params.get('orderDirection') ?? '') as OrderDirectionType
     if (orderDirectionParam === 1 || orderDirectionParam === -1) {
       this.filters.orderDirection = orderDirectionParam
@@ -250,9 +254,11 @@ export default class Portfolio extends Vue {
 
   updateFiltersParams () {
     const url = new URL(window.location.href)
-    url.searchParams.set('projects', this.filters.includeProjects.toString())
-    url.searchParams.set('games', this.filters.includeGames.toString())
-    url.searchParams.set('animations', this.filters.includeAnimations.toString())
+
+    this.categories.forEach((value, key) => {
+      url.searchParams.set(key, value.include.toString())
+    })
+
     url.searchParams.set('order', this.filters.order)
     url.searchParams.set('orderDirection', this.filters.orderDirection.toString())
 
