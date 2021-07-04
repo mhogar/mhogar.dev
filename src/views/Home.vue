@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="home">
     <Carousel :id="'categoryCarousel'" :imageDir="'home/'" :slides="carouselSlides" />
     <div class="container">
       <Featurettes :content="featurettesContent" />
@@ -9,8 +9,23 @@
 
 <style lang="scss" scoped>
 
+@import "../assets/theme.scss";
+
+.mode-light.home {
+    background-color: $background-light;
+    color: $bodytext-light;
+}
+.mode-dark.home {
+    background-color: $background-dark;
+    color: $bodytext-dark;
+}
+
 .carousel {
   margin-bottom: 4rem;
+}
+
+.featurettes {
+  padding-bottom: 5rem;
 }
 
 </style>

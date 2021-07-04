@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="portfolio">
     <section class="py-5 text-center container">
       <div class="row py-lg-5">
         <div class="col-lg-6 col-md-8 mx-auto">
@@ -13,13 +13,13 @@
       </div>
       <div class="row order-dropdowns">
         <div class="input-group justify-content-center" role="group">
-          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Order by {{filters.order}}</button>
+          <button :class="'btn dropdown-toggle ' + outlineButtonClass()" type="button" data-bs-toggle="dropdown" aria-expanded="false">Order by {{filters.order}}</button>
           <ul class="dropdown-menu">
             <li><button class="dropdown-item" @click="updateFiltersOrder('Relevance')">Relevance</button></li>
             <li><button class="dropdown-item" @click="updateFiltersOrder('Name')">Name</button></li>
             <li><button class="dropdown-item" @click="updateFiltersOrder('Date')">Date</button></li>
           </ul>
-          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">{{orderDirectionDisplayText(filters.orderDirection)}}</button>
+          <button :class="'btn dropdown-toggle ' + outlineButtonClass()" type="button" data-bs-toggle="dropdown" aria-expanded="false">{{orderDirectionDisplayText(filters.orderDirection)}}</button>
           <ul class="dropdown-menu">
             <li><button class="dropdown-item" @click="filters.orderDirection = 1">{{orderDirectionDisplayText(1)}}</button></li>
             <li><button class="dropdown-item" @click="filters.orderDirection = -1">{{orderDirectionDisplayText(-1)}}</button></li>
@@ -38,7 +38,7 @@
                 <p class="card-text">{{card.description}}</p>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
-                    <a v-for="link in card.buttonLinks" :key="link.url" class="btn btn-sm btn-outline-secondary" :href="link.url" target="_blank">
+                    <a v-for="link in card.buttonLinks" :key="link.url" :class="'btn btn-sm ' + outlineButtonClass()" :href="link.url" target="_blank">
                       {{link.text}}
                     </a>
                   </div>
@@ -55,13 +55,50 @@
 
 <style lang="scss" scoped>
 
+@import "../assets/theme.scss";
+
 .order-dropdowns {
   margin-top: 1rem;
+}
+
+.mode-light .text-muted {
+  color: $bodytext-light !important;
+}
+.mode-dark .text-muted {
+  color: $bodytext-dark !important;
+}
+
+.mode-light .album {
+  background-color: $background2-light !important;
+}
+.mode-dark .album {
+  background-color: $background2-dark !important;
 }
 
 .card > img {
   width: 100%;
   height: 225px;
+}
+
+.mode-light .card {
+  background-color: $background-light;
+}
+.mode-dark .card {
+  background-color: $background-dark;
+}
+
+.mode-light .card-title {
+  color: $light;
+}
+.mode-dark .card-title {
+  color: $dark;
+}
+
+.mode-light .shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem $drop-shadow-light !important;
+}
+.mode-dark .shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem $drop-shadow-dark !important;
 }
 
 </style>
@@ -98,6 +135,9 @@ interface Filters {
 }
 
 @Options({
+  props: {
+    darkMode: Boolean
+  },
   watch: {
     filters: {
       deep: true,
@@ -116,6 +156,8 @@ interface Filters {
   }
 })
 export default class Portfolio extends Vue {
+  darkMode!: boolean
+
   cards: PortfolioCard[] = cards
 
   categories: Map<string, CategoryData> = new Map<string, CategoryData>()
@@ -136,6 +178,10 @@ export default class Portfolio extends Vue {
 
   loadThumbnail (thumbnail: string): string {
     return require('@/assets/portfolio/thumbnails/' + thumbnail)
+  }
+
+  outlineButtonClass (): string {
+    return 'btn-outline-' + (this.darkMode ? 'dark' : 'light')
   }
 
   updateFiltersOrder (order: OrderType) {
