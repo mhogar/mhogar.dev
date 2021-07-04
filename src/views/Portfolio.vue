@@ -2,9 +2,9 @@
   <div class="portfolio">
     <section class="py-5 text-center container">
       <div class="row py-lg-5">
-        <div class="col-lg-6 col-md-8 mx-auto">
+        <div class="col-lg-8 col-md-8 mx-auto">
           <h1>Project Portfolio</h1>
-          <p class="lead text-muted">This is a collection of every project, game, and animation I think are worth sharing.</p>
+          <p class="lead text-muted">This is a collection of note-worthy projects, games, and animations I have worked on over the years. Use this page to quickly filter and sort through the list to find the projects you are interested in.</p>
         </div>
       </div>
       <div v-for="kv in categories" :key="kv[0]" class="form-check form-check-inline">
@@ -213,16 +213,46 @@ export default class Portfolio extends Vue {
     const year = tokens[0]
     const month = parseInt(tokens[1])
 
-    if (month < 4) {
-      return 'Winter ' + year
+    var monthStr: string
+    switch (month) {
+      case 1:
+        monthStr = 'January'
+        break
+      case 2:
+        monthStr = 'Feburary'
+        break
+      case 3:
+        monthStr = 'March'
+        break
+      case 4:
+        monthStr = 'April'
+        break
+      case 5:
+        monthStr = 'May'
+        break
+      case 6:
+        monthStr = 'June'
+        break
+      case 7:
+        monthStr = 'July'
+        break
+      case 8:
+        monthStr = 'August'
+        break
+      case 9:
+        monthStr = 'September'
+        break
+      case 10:
+        monthStr = 'October'
+        break
+      case 11:
+        monthStr = 'November'
+        break
+      default:
+        monthStr = 'December'
     }
-    if (month < 7) {
-      return 'Spring ' + year
-    }
-    if (month < 10) {
-      return 'Summer ' + year
-    }
-    return 'Fall ' + year
+
+    return monthStr + ' ' + year
   }
 
   orderDirectionDisplayText (dir: OrderDirectionType): string {

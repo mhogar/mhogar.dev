@@ -2,7 +2,7 @@
   {
     "title": "Slime Farm",
     "description": "Slime Farm is an evolution simulator. Completed as a university individual course of study, this application is an intuitive and user-friendly approach to genetic algorithms.",
-    "category": "projects",
+    "category": "code",
     "date": "2020-12",
     "relevance": 0,
     "thumbnail": "slime_farm.png",
@@ -16,8 +16,8 @@
   {
     "title": "Student's Toolshed",
     "description": "Created using ruby-on-rails, Student's Toolshed is a collection of self-contained javascript applications. The apps themselves are small, useful tools targeted for use by university students.",
-    "category": "projects",
-    "date": "2019-01",
+    "category": "code",
+    "date": "2019-02",
     "relevance": 40,
     "thumbnail": "students_toolshed.png",
     "buttonLinks": [
@@ -34,7 +34,7 @@
   {
     "title": "Course Scheduler",
     "description": "Course Scheduler is an application that generates all possible schedules given the timeslots for each course. It may look and feel like legacy software, but it gets the job done.",
-    "category": "projects",
+    "category": "code",
     "date": "2018-04",
     "relevance": 60,
     "thumbnail": "scheduler.png",
@@ -48,8 +48,8 @@
   {
     "title": "Study Pres Generator",
     "description": "Study Pres Generator is a simple command-line ruby application for creating flashcard study presentations. It parses the input from a JSON file and uses LaTeX to create the presentation.",
-    "category": "projects",
-    "date": "2019-10",
+    "category": "code",
+    "date": "2019-09",
     "relevance": 50,
     "thumbnail": "study_pres_gen.png",
     "buttonLinks": [
@@ -61,9 +61,9 @@
   },
   {
     "title": "Migration Runner",
-    "description": "Migration Runner is a Go library for managing and running database migrations. It is maintained by a continuous integration pipeline and boasts 100% test coverage.",
-    "category": "projects",
-    "date": "2020-07",
+    "description": "Migration Runner is a Go library for managing and running database migrations. It's maintained by a continuous integration pipeline and boasts 100% test coverage.",
+    "category": "code",
+    "date": "2020-06",
     "relevance": 30,
     "thumbnail": "migration_runner.png",
     "buttonLinks": [
@@ -76,7 +76,7 @@
   {
     "title": "Cube Robots... in Space!!!",
     "category": "games",
-    "description": "Created for the GMTK Game Jam 2021, this is a simple puzzle game where you play as an adorable cube robot trying to destroy all platforms in the level. It placed in the top 16% of near 6000 entries.",
+    "description": "Created for the GMTK Game Jam 2021, this game was made in 48 hours including all code, graphics, and sound effects. It placed 921st out of the 5800 total entries.",
     "date": "2021-06",
     "relevance": 10,
     "thumbnail": "cube_robots.png",
