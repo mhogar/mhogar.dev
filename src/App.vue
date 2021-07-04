@@ -39,9 +39,21 @@
 <style>
 
 body {
+  background-color: #eee;
+}
+
+#app {
+  /* wrapper */
+  max-width: 1680px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #fff;
+  box-shadow: 0 2px 4px 0 rgba(34,36,38,.12), 0 2px 10px 0 rgba(34,36,38,.15);
+
+  /* styling */
+  color: #5a5a5a;
   padding-top: 3rem;
   padding-bottom: 3rem;
-  color: #5a5a5a;
 }
 
 </style>
