@@ -3,7 +3,7 @@
     <section class="py-5 text-center container">
       <div class="row py-lg-5">
         <div class="col-lg-6 col-md-8 mx-auto">
-          <h1 class="fw-light">Project Portfolio</h1>
+          <h1>Project Portfolio</h1>
           <p class="lead text-muted">This is a collection of every project, game, and animation I think are worth sharing.</p>
         </div>
       </div>
@@ -27,7 +27,7 @@
         </div>
       </div>
     </section>
-    <div class="album py-5 bg-light">
+    <div class="album py-5">
       <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
           <div v-for="card in filteredCards()" :key="card.title" class="col">
@@ -57,22 +57,14 @@
 
 @import "../assets/theme.scss";
 
+h1 {
+  color: $primary;
+  font-weight: 300;
+  line-height: 1;
+}
+
 .order-dropdowns {
   margin-top: 1rem;
-}
-
-.mode-light .text-muted {
-  color: $bodytext-light !important;
-}
-.mode-dark .text-muted {
-  color: $bodytext-dark !important;
-}
-
-.mode-light .album {
-  background-color: $background2-light !important;
-}
-.mode-dark .album {
-  background-color: $background2-dark !important;
 }
 
 .card > img {
@@ -80,25 +72,48 @@
   height: 225px;
 }
 
-.mode-light .card {
-  background-color: $background-light;
-}
-.mode-dark .card {
-  background-color: $background-dark;
+.mode-light {
+  .text-muted {
+    color: $bodytext-light !important;
+  }
+
+  .album {
+    background-color: $background2-light !important;
+  }
+
+  .card {
+    background-color: $background-light;
+  }
+
+  .card-title {
+    color: $light;
+  }
+
+  .shadow-sm {
+    box-shadow: 0 0.125rem 0.25rem $drop-shadow-light !important;
+  }
 }
 
-.mode-light .card-title {
-  color: $light;
-}
-.mode-dark .card-title {
-  color: $dark;
-}
+.mode-dark {
+  .text-muted {
+    color: $bodytext-dark !important;
+  }
 
-.mode-light .shadow-sm {
-  box-shadow: 0 0.125rem 0.25rem $drop-shadow-light !important;
-}
-.mode-dark .shadow-sm {
-  box-shadow: 0 0.125rem 0.25rem $drop-shadow-dark !important;
+  .album {
+    background-color: $background2-dark !important;
+  }
+
+  .card {
+    background-color: $background-dark;
+  }
+
+  .card-title {
+    color: $dark;
+  }
+
+  .shadow-sm {
+    box-shadow: 0 0.125rem 0.25rem $drop-shadow-dark !important;
+  }
 }
 
 </style>

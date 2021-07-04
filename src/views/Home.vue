@@ -15,6 +15,7 @@
     background-color: $background-light;
     color: $bodytext-light;
 }
+
 .mode-dark.home {
     background-color: $background-dark;
     color: $bodytext-dark;

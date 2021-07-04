@@ -20,7 +20,7 @@
           </div>
           <div class="nav-item">
             <a href="#" @click.prevent="darkMode = !darkMode">
-              <img :src="loadDarkModeToggleIcon()" alt="Dark Mode Toggle" class="dark-mode-toggle">
+              <img :src="loadDarkModeToggleIcon()" alt="Dark Mode Toggle" width="32" height="32">
             </a>
           </div>
         </div>
@@ -52,13 +52,6 @@
 @import "./assets/theme.scss";
 @import "../node_modules/bootstrap/scss/bootstrap";
 
-.mode-light {
-  background-color: #eee;
-}
-.mode-dark {
-  background-color: #111;
-}
-
 #app {
   padding-top: 3.5rem;
 }
@@ -68,29 +61,9 @@
   margin-left: auto;
   margin-right: auto;
 }
-.mode-light .wrapper {
-  box-shadow: 0 2px 4px 0 $drop-shadow-light, 0 2px 10px 0 $drop-shadow-light;
-}
-.mode-dark .wrapper {
-  box-shadow: 0 2px 4px 0 $drop-shadow-dark, 0 2px 10px 0 $drop-shadow-dark;
-}
 
 .navbar {
   background-color: $navbar;
-}
-
-.mode-light #currentPage {
-  background-color: $background-light;
-  color: $bodytext-light;
-}
-.mode-dark #currentPage {
-  background-color: $background-dark;
-  color: $bodytext-dark;
-}
-
-.dark-mode-toggle {
-  width: 32px;
-  height: 32px;
 }
 
 footer {
@@ -98,6 +71,32 @@ footer {
   background-color: $footer;
   padding-top: 3rem;
   padding-bottom: 3rem;
+}
+
+.mode-light {
+  background-color: #eee;
+
+  .wrapper {
+    box-shadow: 0 2px 4px 0 $drop-shadow-light, 0 2px 10px 0 $drop-shadow-light;
+  }
+
+  #currentPage {
+    background-color: $background-light;
+    color: $bodytext-light;
+  }
+}
+
+.mode-dark {
+  background-color: #111;
+
+  .wrapper {
+    box-shadow: 0 2px 4px 0 $drop-shadow-dark, 0 2px 10px 0 $drop-shadow-dark;
+  }
+
+  #currentPage {
+    background-color: $background-dark;
+    color: $bodytext-dark;
+  }
 }
 
 </style>
@@ -108,7 +107,7 @@ import '../node_modules/bootstrap/dist/js/bootstrap.min.js'
 import { Vue } from 'vue-class-component'
 
 export default class App extends Vue {
-  darkMode: boolean = false
+  darkMode: boolean = true
 
   loadDarkModeToggleIcon () {
     if (this.darkMode) {
