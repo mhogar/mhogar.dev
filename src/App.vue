@@ -87,7 +87,7 @@ footer {
 }
 
 .mode-dark {
-  background-color: #111;
+  background-color: #141514;
 
   .wrapper {
     box-shadow: 0 2px 4px 0 $drop-shadow-dark, 0 2px 10px 0 $drop-shadow-dark;
