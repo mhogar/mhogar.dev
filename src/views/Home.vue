@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 
 .carousel {
   margin-bottom: 4rem;

@@ -25,18 +25,27 @@
       <component :is="Component" />
     </transition>
   </router-view>
-  <footer class="container footer">
-    <p class="float-end"><a href="#">Back to top</a></p>
-    <h6>Contact Sources</h6>
-    <ul>
-      <li>
-        <a href="https://www.linkedin.com/in/ryan-stamp-a91020152/">Linked In</a>
-      </li>
-    </ul>
+  <footer>
+    <div class="container">
+      <p class="float-end"><a href="#" @click.prevent="scrollToTop()">Back to top</a></p>
+      <h6>Contact Sources</h6>
+      <ul>
+        <li>
+          <a href="https://www.linkedin.com/in/ryan-stamp-a91020152/">Linked In</a>
+        </li>
+      </ul>
+    </div>
   </footer>
 </template>
 
-<style>
+<style lang="scss">
+
+/* bootstrap config */
+$primary: #ffc107;
+$secondary: #374140;
+$dark: #2A2C2B;
+
+@import "../node_modules/bootstrap/scss/bootstrap";
 
 body {
   background-color: #eee;
@@ -53,7 +62,26 @@ body {
   /* styling */
   color: #5a5a5a;
   padding-top: 3rem;
+}
+
+footer {
+  color: #fff;
+  background-color: $dark;
+  padding-top: 3rem;
   padding-bottom: 3rem;
 }
 
 </style>
+
+<script lang="ts">
+
+import '../node_modules/bootstrap/dist/js/bootstrap.min.js'
+import { Vue } from 'vue-class-component'
+
+export default class App extends Vue {
+  scrollToTop () {
+    window.scrollTo(0, 0)
+  }
+}
+
+</script>

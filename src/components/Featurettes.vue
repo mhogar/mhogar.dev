@@ -14,7 +14,7 @@
   <hr class="featurette-divider">
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 
 .featurette-divider {
   margin: 5rem 0; /* Space out the Bootstrap <hr> more */

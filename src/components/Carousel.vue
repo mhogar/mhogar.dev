@@ -31,7 +31,7 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 
 /* Since positioning the image, we need to help out the caption */
 .carousel-caption {

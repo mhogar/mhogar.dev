@@ -15,14 +15,14 @@
         <div class="input-group justify-content-center" role="group">
           <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Order by {{filters.order}}</button>
           <ul class="dropdown-menu">
-            <li><button class="dropdown-item" v-on:click="updateFiltersOrder('Relevance')">Relevance</button></li>
-            <li><button class="dropdown-item" v-on:click="updateFiltersOrder('Name')">Name</button></li>
-            <li><button class="dropdown-item" v-on:click="updateFiltersOrder('Date')">Date</button></li>
+            <li><button class="dropdown-item" @click="updateFiltersOrder('Relevance')">Relevance</button></li>
+            <li><button class="dropdown-item" @click="updateFiltersOrder('Name')">Name</button></li>
+            <li><button class="dropdown-item" @click="updateFiltersOrder('Date')">Date</button></li>
           </ul>
           <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">{{orderDirectionDisplayText(filters.orderDirection)}}</button>
           <ul class="dropdown-menu">
-            <li><button class="dropdown-item" v-on:click="filters.orderDirection = 1">{{orderDirectionDisplayText(1)}}</button></li>
-            <li><button class="dropdown-item" v-on:click="filters.orderDirection = -1">{{orderDirectionDisplayText(-1)}}</button></li>
+            <li><button class="dropdown-item" @click="filters.orderDirection = 1">{{orderDirectionDisplayText(1)}}</button></li>
+            <li><button class="dropdown-item" @click="filters.orderDirection = -1">{{orderDirectionDisplayText(-1)}}</button></li>
           </ul>
         </div>
       </div>
@@ -53,14 +53,10 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 
 .order-dropdowns {
   margin-top: 1rem;
-}
-
-.album {
-  margin-bottom: 3rem;
 }
 
 .card > img {
