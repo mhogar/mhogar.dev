@@ -61,7 +61,7 @@ body {
 
   /* styling */
   color: #5a5a5a;
-  padding-top: 3rem;
+  padding-top: 3.5rem;
 }
 
 footer {
