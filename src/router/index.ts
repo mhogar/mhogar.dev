@@ -16,10 +16,15 @@ const routes = [
     path: '/blog',
     name: 'Blog',
     component: () => import('../views/Blog.vue')
+  },
+  {
+    path: '/:catchAll(.*)',
+    name: 'NotFound',
+    component: () => import('../views/NotFound.vue')
   }
 ]
 
-const router = createRouter({
+export default createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
   scrollBehavior (to, from, savedPosition): any {
@@ -34,5 +39,3 @@ const router = createRouter({
     })
   }
 })
-
-export default router
