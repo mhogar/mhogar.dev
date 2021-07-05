@@ -1,4 +1,4 @@
-# mhogar.dev_v2
+# mhogar.dev
 
 ## Project setup
 ```
