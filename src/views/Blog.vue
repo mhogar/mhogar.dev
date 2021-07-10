@@ -11,13 +11,13 @@
     </div>
     <div class="container blog-body">
       <hr class="seperator" />
-      <div v-for="post in posts" :key="post.id">
-        <article class="blog-post">
-          <h2 class="blog-post-title">{{post.title}}</h2>
-          <p class="blog-post-meta">{{post.date}}</p>
-          <p>{{post.lead}}</p>
-          <a class="link-secondary" href="#">continue reading...</a>
-        </article>
+      <div v-for="kv in posts" :key="kv[0]">
+        <div class="blog-post">
+          <h2 class="blog-post-title">{{kv[1].title}}</h2>
+          <p class="blog-post-meta">{{kv[1].date}}</p>
+          <p>{{kv[1].lead}}</p>
+          <router-link :to="'/blog/' + kv[0]" class="link-secondary">continue reading...</router-link>
+        </div>
         <hr class="seperator" />
       </div>
     </div>
@@ -45,6 +45,7 @@
   margin-bottom: .25rem;
   font-size: 2.5rem;
 }
+
 .blog-post-meta {
   margin-bottom: 1.25rem;
 }
@@ -69,6 +70,16 @@
   }
 }
 
+@media (max-width: 62em) {
+  .blog-body {
+    padding: 0.5rem;
+  }
+
+  .blog-post {
+    padding: 0rem;
+  }
+}
+
 </style>
 
 <script lang="ts">
@@ -78,15 +89,21 @@ import { Vue } from 'vue-class-component'
 // @ts-ignore
 import posts from '@/assets/blog/posts.json'
 
-interface BlogPost {
-  id: string
+export interface BlogPost {
   title: string
   date: string
   lead: string
 }
 
 export default class Portfolio extends Vue {
-  posts: BlogPost[] = posts
+  posts: Map<string, BlogPost> = new Map<string, BlogPost>()
+
+  created () {
+    for (const key in posts) {
+      // @ts-ignore
+      this.posts.set(key, posts[key])
+    }
+  }
 }
 
 </script>
