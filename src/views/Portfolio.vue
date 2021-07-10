@@ -122,6 +122,7 @@ h1 {
 
 import { Options, Vue } from 'vue-class-component'
 import Link from '../common/Link'
+import StringHelper from '../common/StringHelper'
 
 // @ts-ignore
 import cards from '@/assets/portfolio/cards.json'
@@ -153,6 +154,7 @@ interface Filters {
   props: {
     darkMode: Boolean
   },
+  mixins: [StringHelper],
   watch: {
     filters: {
       deep: true,
@@ -202,10 +204,6 @@ export default class Portfolio extends Vue {
   updateFiltersOrder (order: OrderType) {
     this.filters.order = order
     this.filters.orderDirection = 1
-  }
-
-  capitalize (str: string) {
-    return str.charAt(0).toUpperCase() + str.slice(1)
   }
 
   dateDisplayText (date: string): string {

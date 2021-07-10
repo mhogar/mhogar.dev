@@ -1,11 +1,15 @@
 {
   "0": {
+    "id": "0",
     "title": "GMTK Game Jam 2021",
+    "category": "retrospectives",
     "date": "June 10, 2021",
     "lead": "I particapated in the GMTK Game Jam 2021, and this is how it went."
   },
   "1": {
+    "id": "1",
     "title": "Lockdown taught me the meaning of life (no seriously)",
+    "category": "life",
     "date": "June 10, 2021",
     "lead": "Some lead text."
   }

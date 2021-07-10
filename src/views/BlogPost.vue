@@ -55,7 +55,7 @@
   }
 }
 
-@media (max-width: 62em) {
+@media (max-width: 40em) {
   .blog-body {
     padding: 0.5rem;
   }
