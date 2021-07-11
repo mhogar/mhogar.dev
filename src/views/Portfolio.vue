@@ -42,7 +42,7 @@
                       {{link.text}}
                     </a>
                   </div>
-                  <small class="text-muted">{{dateDisplayText(card.date)}}</small>
+                  <small class="text-muted">{{formatDateMonthYear(card.date)}}</small>
                 </div>
               </div>
             </div>
@@ -123,15 +123,16 @@ h1 {
 import { Options, Vue } from 'vue-class-component'
 import Link from '../common/Link'
 import StringHelper from '../common/StringHelper'
+import DateHelper from '../common/DateHelper'
 
 // @ts-ignore
-import cards from '@/assets/portfolio/cards.json'
+import cardsJson from '@/assets/portfolio/cards.json'
 
 export interface PortfolioCard {
   title: string,
   description: string,
   category: string,
-  date: string,
+  date: Date,
   relevance: number,
   thumbnail: string,
   buttonLinks: Link[]
@@ -160,7 +161,7 @@ interface FiltersParams {
   props: {
     darkMode: Boolean
   },
-  mixins: [StringHelper],
+  mixins: [StringHelper, DateHelper],
   watch: {
     filters: {
       deep: true,
@@ -181,7 +182,7 @@ interface FiltersParams {
 export default class Portfolio extends Vue {
   darkMode!: boolean
 
-  cards: PortfolioCard[] = cards
+  cards: PortfolioCard[] = []
 
   categories: Map<string, CategoryData> = new Map<string, CategoryData>()
   categoriesInitialized: boolean = false
@@ -192,6 +193,19 @@ export default class Portfolio extends Vue {
   }
 
   created () {
+    cardsJson.forEach(cardJson => {
+      this.cards.push({
+        title: cardJson.title,
+        description: cardJson.description,
+        category: cardJson.category,
+        // @ts-ignore
+        date: this.parseDate(cardJson.date),
+        relevance: cardJson.relevance,
+        thumbnail: cardJson.thumbnail,
+        buttonLinks: cardJson.buttonLinks
+      })
+    })
+
     this.initCategories()
     this.categoriesInitialized = true
 
@@ -210,53 +224,6 @@ export default class Portfolio extends Vue {
   updateFiltersOrder (order: OrderType) {
     this.filters.order = order
     this.filters.orderDirection = 1
-  }
-
-  dateDisplayText (date: string): string {
-    const tokens = date.split('-')
-    const year = tokens[0]
-    const month = parseInt(tokens[1])
-
-    var monthStr: string
-    switch (month) {
-      case 1:
-        monthStr = 'January'
-        break
-      case 2:
-        monthStr = 'Feburary'
-        break
-      case 3:
-        monthStr = 'March'
-        break
-      case 4:
-        monthStr = 'April'
-        break
-      case 5:
-        monthStr = 'May'
-        break
-      case 6:
-        monthStr = 'June'
-        break
-      case 7:
-        monthStr = 'July'
-        break
-      case 8:
-        monthStr = 'August'
-        break
-      case 9:
-        monthStr = 'September'
-        break
-      case 10:
-        monthStr = 'October'
-        break
-      case 11:
-        monthStr = 'November'
-        break
-      default:
-        monthStr = 'December'
-    }
-
-    return monthStr + ' ' + year
   }
 
   orderDirectionDisplayText (dir: OrderDirectionType): string {
@@ -287,27 +254,15 @@ export default class Portfolio extends Vue {
     })
 
     if (this.filters.order === 'Name') {
+      // @ts-ignore
       return filteredCards.sort((a, b) => this.filters.orderDirection * this.stringCompareCaseInsensitive(a.title, b.title))
     }
     if (this.filters.order === 'Date') {
-      return filteredCards.sort((a, b) => -this.filters.orderDirection * this.stringCompare(a.date, b.date))
+      // @ts-ignore
+      return filteredCards.sort((a, b) => -this.filters.orderDirection * this.dateCompare(a.date, b.date))
     }
     // relevance
     return filteredCards.sort((a, b) => this.filters.orderDirection * (a.relevance - b.relevance))
-  }
-
-  stringCompare (a: string, b: string): number {
-    if (a < b) {
-      return -1
-    }
-    if (a > b) {
-      return 1
-    }
-    return 0
-  }
-
-  stringCompareCaseInsensitive (a: string, b: string): number {
-    return this.stringCompare(a.toLowerCase(), b.toLowerCase())
   }
 
   initCategories () {

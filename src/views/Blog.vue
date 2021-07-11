@@ -15,7 +15,7 @@
       <div v-for="post in filteredPosts()" :key="post.id">
         <div class="blog-post">
           <h2 class="blog-post-title">{{post.title}}</h2>
-          <p class="blog-post-meta">{{formatDate(post.date)}}</p>
+          <p class="blog-post-meta">{{formatDateDayMonthYear(post.date)}}</p>
           <p>{{post.lead}}</p>
           <router-link :to="'/blog/' + post.id" class="link-secondary">View Full Post</router-link>
         </div>

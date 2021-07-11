@@ -4,7 +4,7 @@
             <div class="blog-post">
               <div v-if="post">
                 <h2 class="blog-post-title">{{post.title}}</h2>
-                <p class="blog-post-meta">{{formatDate(post.date)}}</p>
+                <p class="blog-post-meta">{{formatDateDayMonthYear(post.date)}}</p>
                 <hr />
                 <p v-for="paragraph in paragraphs" :key="paragraph">{{paragraph}}</p>
               </div>
