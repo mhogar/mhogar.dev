@@ -150,6 +150,12 @@ interface Filters {
   orderDirection: OrderDirectionType
 }
 
+interface FiltersParams {
+  order: OrderType
+  orderDirection: OrderDirectionType
+  [key: string]: any
+}
+
 @Options({
   props: {
     darkMode: Boolean
@@ -322,37 +328,37 @@ export default class Portfolio extends Vue {
   }
 
   loadFiltersFromParams () {
-    const params = new URL(window.location.href).searchParams
+    const params = this.$route.query
 
     this.categories.forEach((value, key) => {
-      const param = params.get(key)
+      const param = params[key]
       if (param) {
         value.include = param === 'true'
       }
     })
 
-    const orderParam = params.get('order') as OrderType
+    const orderParam = params.order as OrderType
     if (orderParam === 'Relevance' || orderParam === 'Name' || orderParam === 'Date') {
       this.filters.order = orderParam
     }
 
-    const orderDirectionParam = parseInt(params.get('orderDirection') ?? '') as OrderDirectionType
+    const orderDirectionParam = parseInt(params.orderDirection?.toString() ?? '') as OrderDirectionType
     if (orderDirectionParam === 1 || orderDirectionParam === -1) {
       this.filters.orderDirection = orderDirectionParam
     }
   }
 
   updateFiltersParams () {
-    const url = new URL(window.location.href)
+    const params = {
+      order: this.filters.order,
+      orderDirection: this.filters.orderDirection
+    } as FiltersParams
 
     this.categories.forEach((value, key) => {
-      url.searchParams.set(key, value.include.toString())
+      params[key] = value.include.toString()
     })
 
-    url.searchParams.set('order', this.filters.order)
-    url.searchParams.set('orderDirection', this.filters.orderDirection.toString())
-
-    window.history.replaceState(null, '', url.href)
+    this.$router.push({ path: 'portfolio', query: params })
   }
 }
 

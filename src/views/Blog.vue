@@ -140,17 +140,12 @@ export default class Portfolio extends Vue {
   }
 
   loadSelectedCategory () {
-    const params = new URL(window.location.href).searchParams
-    this.selectedCategory = params.get('category') ?? ''
+    this.selectedCategory = this.$route.query.category?.toString() ?? ''
   }
 
   updateSelectedCategory (category: string) {
     this.selectedCategory = category
-
-    const url = new URL(window.location.href)
-    url.searchParams.set('category', category)
-
-    window.history.replaceState(null, '', url.href)
+    this.$router.push({ path: 'blog', query: { category: category } })
   }
 
   filteredPosts (): BlogPost[] {
