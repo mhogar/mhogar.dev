@@ -15,7 +15,7 @@
       <div v-for="post in filteredPosts()" :key="post.id">
         <div class="blog-post">
           <h2 class="blog-post-title">{{post.title}}</h2>
-          <p class="blog-post-meta">{{post.date}}</p>
+          <p class="blog-post-meta">{{formatDate(post.date)}}</p>
           <p>{{post.lead}}</p>
           <router-link :to="'/blog/' + post.id" class="link-secondary">View Full Post</router-link>
         </div>
@@ -91,6 +91,7 @@
 
 import { Options, Vue } from 'vue-class-component'
 import StringHelper from '../common/StringHelper'
+import DateHelper from '../common/DateHelper'
 
 // @ts-ignore
 import posts from '@/assets/blog/posts.json'
@@ -99,7 +100,7 @@ export interface BlogPost {
   id: string
   title: string
   category: string
-  date: string
+  date: Date
   lead: string
 }
 
@@ -109,7 +110,7 @@ interface CategoryData {
 }
 
 @Options({
-  mixins: [StringHelper]
+  mixins: [StringHelper, DateHelper]
 })
 export default class Portfolio extends Vue {
   categoryMap: Map<string, CategoryData> = new Map<string, CategoryData>()
@@ -120,9 +121,19 @@ export default class Portfolio extends Vue {
 
     // @ts-ignore
     Object.entries(posts).forEach(kv => {
-      const post = kv[1]
-      const data = this.categoryMap.get(post.category)
+      const json = kv[1]
+      const post : BlogPost = {
+        id: json.id,
+        title: json.title,
+        category: json.category,
+        // @ts-ignore
+        date: this.parseDate(json.date),
+        lead: json.lead
+      }
 
+      console.log(post.date.toDateString())
+
+      const data = this.categoryMap.get(post.category)
       if (!data) {
         this.categoryMap.set(post.category, {
           posts: [post],

@@ -4,7 +4,7 @@
             <div class="blog-post">
               <div v-if="post">
                 <h2 class="blog-post-title">{{post.title}}</h2>
-                <p class="blog-post-meta">{{post.date}}</p>
+                <p class="blog-post-meta">{{formatDate(post.date)}}</p>
                 <hr />
                 <p v-for="paragraph in paragraphs" :key="paragraph">{{paragraph}}</p>
               </div>
@@ -74,13 +74,16 @@
 
 <script lang="ts">
 
-import { Vue } from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
+import BlogPost from './Blog.vue'
+import DateHelper from '../common/DateHelper'
 
 // @ts-ignore
 import posts from '@/assets/blog/posts.json'
 
-import BlogPost from './Blog.vue'
-
+@Options({
+  mixins: [DateHelper]
+})
 export default class Portfolio extends Vue {
   post: BlogPost = {} as BlogPost
   paragraphs: string[] = []
