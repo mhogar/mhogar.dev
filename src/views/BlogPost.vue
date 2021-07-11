@@ -2,10 +2,14 @@
     <div class="blog-post">
         <div class="container blog-body">
             <div class="blog-post">
+              <div v-if="post">
                 <h2 class="blog-post-title">{{post.title}}</h2>
                 <p class="blog-post-meta">{{post.date}}</p>
                 <hr />
                 <p v-for="paragraph in paragraphs" :key="paragraph">{{paragraph}}</p>
+              </div>
+              <h2 v-else>Blog Post Not Found</h2>
+              <a href="#" @click.prevent="$router.back()">Back</a>
             </div>
         </div>
     </div>
@@ -86,7 +90,9 @@ export default class Portfolio extends Vue {
 
     // @ts-ignore
     this.post = posts[id]
-    this.paragraphs = require('@/assets/blog/posts/' + id + '.json')
+    if (this.post) {
+      this.paragraphs = require('@/assets/blog/posts/' + id + '.json')
+    }
   }
 }
 
