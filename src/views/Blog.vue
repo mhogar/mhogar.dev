@@ -131,8 +131,6 @@ export default class Portfolio extends Vue {
         lead: json.lead
       }
 
-      console.log(post.date.toDateString())
-
       const data = this.categoryMap.get(post.category)
       if (!data) {
         this.categoryMap.set(post.category, {
@@ -143,6 +141,11 @@ export default class Portfolio extends Vue {
         data.posts.push(post)
         data.count += 1
       }
+    })
+
+    this.categoryMap.forEach(value => {
+      // @ts-ignore
+      value.posts.sort((a, b) => this.dateCompare(b.date, a.date))
     })
 
     if (!this.categoryMap.has(this.selectedCategory)) {
