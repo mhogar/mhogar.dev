@@ -42,7 +42,7 @@
                       {{link.text}}
                     </a>
                   </div>
-                  <small class="text-muted">{{dateDisplayText(card.date)}}</small>
+                  <small class="text-muted">{{formatDateMonthYear(card.date)}}</small>
                 </div>
               </div>
             </div>
@@ -122,15 +122,17 @@ h1 {
 
 import { Options, Vue } from 'vue-class-component'
 import Link from '../common/Link'
+import StringHelper from '../common/StringHelper'
+import DateHelper from '../common/DateHelper'
 
 // @ts-ignore
-import cards from '@/assets/portfolio/cards.json'
+import cardsJson from '@/assets/portfolio/cards.json'
 
 export interface PortfolioCard {
   title: string,
   description: string,
   category: string,
-  date: string,
+  date: Date,
   relevance: number,
   thumbnail: string,
   buttonLinks: Link[]
@@ -149,10 +151,17 @@ interface Filters {
   orderDirection: OrderDirectionType
 }
 
+interface FiltersParams {
+  order: OrderType
+  orderDirection: OrderDirectionType
+  [key: string]: any
+}
+
 @Options({
   props: {
     darkMode: Boolean
   },
+  mixins: [StringHelper, DateHelper],
   watch: {
     filters: {
       deep: true,
@@ -173,7 +182,7 @@ interface Filters {
 export default class Portfolio extends Vue {
   darkMode!: boolean
 
-  cards: PortfolioCard[] = cards
+  cards: PortfolioCard[] = []
 
   categories: Map<string, CategoryData> = new Map<string, CategoryData>()
   categoriesInitialized: boolean = false
@@ -184,6 +193,19 @@ export default class Portfolio extends Vue {
   }
 
   created () {
+    cardsJson.forEach(cardJson => {
+      this.cards.push({
+        title: cardJson.title,
+        description: cardJson.description,
+        category: cardJson.category,
+        // @ts-ignore
+        date: this.parseDate(cardJson.date),
+        relevance: cardJson.relevance,
+        thumbnail: cardJson.thumbnail,
+        buttonLinks: cardJson.buttonLinks
+      })
+    })
+
     this.initCategories()
     this.categoriesInitialized = true
 
@@ -202,57 +224,6 @@ export default class Portfolio extends Vue {
   updateFiltersOrder (order: OrderType) {
     this.filters.order = order
     this.filters.orderDirection = 1
-  }
-
-  capitalize (str: string) {
-    return str.charAt(0).toUpperCase() + str.slice(1)
-  }
-
-  dateDisplayText (date: string): string {
-    const tokens = date.split('-')
-    const year = tokens[0]
-    const month = parseInt(tokens[1])
-
-    var monthStr: string
-    switch (month) {
-      case 1:
-        monthStr = 'January'
-        break
-      case 2:
-        monthStr = 'Feburary'
-        break
-      case 3:
-        monthStr = 'March'
-        break
-      case 4:
-        monthStr = 'April'
-        break
-      case 5:
-        monthStr = 'May'
-        break
-      case 6:
-        monthStr = 'June'
-        break
-      case 7:
-        monthStr = 'July'
-        break
-      case 8:
-        monthStr = 'August'
-        break
-      case 9:
-        monthStr = 'September'
-        break
-      case 10:
-        monthStr = 'October'
-        break
-      case 11:
-        monthStr = 'November'
-        break
-      default:
-        monthStr = 'December'
-    }
-
-    return monthStr + ' ' + year
   }
 
   orderDirectionDisplayText (dir: OrderDirectionType): string {
@@ -283,27 +254,15 @@ export default class Portfolio extends Vue {
     })
 
     if (this.filters.order === 'Name') {
+      // @ts-ignore
       return filteredCards.sort((a, b) => this.filters.orderDirection * this.stringCompareCaseInsensitive(a.title, b.title))
     }
     if (this.filters.order === 'Date') {
-      return filteredCards.sort((a, b) => -this.filters.orderDirection * this.stringCompare(a.date, b.date))
+      // @ts-ignore
+      return filteredCards.sort((a, b) => -this.filters.orderDirection * this.dateCompare(a.date, b.date))
     }
     // relevance
     return filteredCards.sort((a, b) => this.filters.orderDirection * (a.relevance - b.relevance))
-  }
-
-  stringCompare (a: string, b: string): number {
-    if (a < b) {
-      return -1
-    }
-    if (a > b) {
-      return 1
-    }
-    return 0
-  }
-
-  stringCompareCaseInsensitive (a: string, b: string): number {
-    return this.stringCompare(a.toLowerCase(), b.toLowerCase())
   }
 
   initCategories () {
@@ -324,37 +283,37 @@ export default class Portfolio extends Vue {
   }
 
   loadFiltersFromParams () {
-    const params = new URL(window.location.href).searchParams
+    const params = this.$route.query
 
     this.categories.forEach((value, key) => {
-      const param = params.get(key)
+      const param = params[key]
       if (param) {
         value.include = param === 'true'
       }
     })
 
-    const orderParam = params.get('order') as OrderType
+    const orderParam = params.order as OrderType
     if (orderParam === 'Relevance' || orderParam === 'Name' || orderParam === 'Date') {
       this.filters.order = orderParam
     }
 
-    const orderDirectionParam = parseInt(params.get('orderDirection') ?? '') as OrderDirectionType
+    const orderDirectionParam = parseInt(params.orderDirection?.toString() ?? '') as OrderDirectionType
     if (orderDirectionParam === 1 || orderDirectionParam === -1) {
       this.filters.orderDirection = orderDirectionParam
     }
   }
 
   updateFiltersParams () {
-    const url = new URL(window.location.href)
+    const params = {
+      order: this.filters.order,
+      orderDirection: this.filters.orderDirection
+    } as FiltersParams
 
     this.categories.forEach((value, key) => {
-      url.searchParams.set(key, value.include.toString())
+      params[key] = value.include.toString()
     })
 
-    url.searchParams.set('order', this.filters.order)
-    url.searchParams.set('orderDirection', this.filters.orderDirection.toString())
-
-    window.history.replaceState(null, '', url.href)
+    this.$router.push({ path: 'portfolio', query: params })
   }
 }
 

@@ -51,7 +51,7 @@
   /*height: 32rem;*/
 }
 
-@media (min-width: 40em) {
+@media (max-width: 40em) {
   /* Bump up size of carousel content */
   .carousel-caption p {
     margin-bottom: 1.25rem;
