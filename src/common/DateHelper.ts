@@ -15,7 +15,8 @@ export default {
     dateCompare: function (a: Date, b: Date): number {
       if (a < b) {
         return -1
-      } else if (a > b) {
+      }
+      if (a > b) {
         return 1
       }
       return 0
