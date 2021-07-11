@@ -4,6 +4,7 @@
             <div class="blog-post">
                 <h2 class="blog-post-title">{{post.title}}</h2>
                 <p class="blog-post-meta">{{post.date}}</p>
+                <hr />
                 <p v-for="paragraph in paragraphs" :key="paragraph">{{paragraph}}</p>
             </div>
         </div>

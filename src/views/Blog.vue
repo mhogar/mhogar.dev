@@ -17,7 +17,7 @@
           <h2 class="blog-post-title">{{post.title}}</h2>
           <p class="blog-post-meta">{{post.date}}</p>
           <p>{{post.lead}}</p>
-          <router-link :to="'/blog/' + post.id" class="link-secondary">continue reading...</router-link>
+          <router-link :to="'/blog/' + post.id" class="link-secondary">View Full Post</router-link>
         </div>
         <hr class="seperator" />
       </div>
