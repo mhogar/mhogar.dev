@@ -35,13 +35,13 @@
   color: $primary !important;
 }
 
-@media (max-width: 40em) {
+@media (min-width: 40em) {
   .featurette-heading {
     font-size: 50px;
   }
 }
 
-@media (max-width: 62em) {
+@media (min-width: 62em) {
   .featurette-heading {
     margin-top: 7rem;
   }
