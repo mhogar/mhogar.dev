@@ -9,7 +9,7 @@
                 <p v-for="paragraph in paragraphs" :key="paragraph">{{paragraph}}</p>
               </div>
               <h2 v-else>Blog Post Not Found</h2>
-              <a href="#" @click.prevent="$router.back()">Back</a>
+              <a class="link-secondary" href="#" @click.prevent="$router.back()">Back</a>
             </div>
         </div>
     </div>
@@ -62,7 +62,7 @@
 
 @media (max-width: 40em) {
   .blog-body {
-    padding: 0.5rem;
+    padding: 1rem;
   }
 
   .blog-post {
