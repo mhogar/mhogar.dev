@@ -100,7 +100,7 @@ export interface BlogPost {
   id: string
   title: string
   category: string
-  date: Date
+  date: string
   lead: string
 }
 
@@ -121,15 +121,7 @@ export default class Portfolio extends Vue {
 
     // @ts-ignore
     Object.entries(posts).forEach(kv => {
-      const json = kv[1]
-      const post : BlogPost = {
-        id: json.id,
-        title: json.title,
-        category: json.category,
-        // @ts-ignore
-        date: this.parseDate(json.date),
-        lead: json.lead
-      }
+      const post : BlogPost = kv[1]
 
       const data = this.categoryMap.get(post.category)
       if (!data) {
@@ -145,7 +137,7 @@ export default class Portfolio extends Vue {
 
     this.categoryMap.forEach(value => {
       // @ts-ignore
-      value.posts.sort((a, b) => this.dateCompare(b.date, a.date))
+      value.posts.sort((a, b) => this.stringCompare(b.date, a.date))
     })
 
     if (!this.categoryMap.has(this.selectedCategory)) {
