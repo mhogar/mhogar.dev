@@ -168,7 +168,7 @@ export default class BlogComponent extends Vue {
 
   updateSelectedCategory (category: string) {
     this.selectedCategory = category
-    this.$router.push({ path: 'blog', query: { category: category } })
+    this.$router.replace({ name: 'Blog', query: { category: category } })
   }
 
   filteredPosts (): BlogPost[] {

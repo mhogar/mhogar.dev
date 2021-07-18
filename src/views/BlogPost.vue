@@ -106,6 +106,7 @@ export default class BlogPostComponent extends Vue {
     // load post from firebase
     firestore.collection('blog-posts').doc(id).onSnapshot(postDoc => {
       if (!postDoc.exists) {
+        this.postLoading = false
         return
       }
       this.post = postDoc.data() as BlogPost

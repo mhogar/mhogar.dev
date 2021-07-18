@@ -313,7 +313,7 @@ export default class Portfolio extends Vue {
       params[key] = value.include.toString()
     })
 
-    this.$router.push({ path: 'portfolio', query: params })
+    this.$router.replace({ name: 'Portfolio', query: params })
   }
 }
 
