@@ -104,8 +104,10 @@ footer {
 <script lang="ts">
 
 import '../node_modules/bootstrap/dist/js/bootstrap.min.js'
+
 import { Vue } from 'vue-class-component'
 import firebase from 'firebase/app'
+import 'firebase/app-check'
 
 export default class App extends Vue {
   darkMode: boolean = true
@@ -120,6 +122,9 @@ export default class App extends Vue {
       messagingSenderId: '1054564120082',
       appId: '1:1054564120082:web:7c86d82c13ba5e01768acb'
     })
+
+    // Activate app check
+    firebase.appCheck().activate('6LcCxaQbAAAAANVgoMY6IOyxOnV848ZWBGKupVVH')
   }
 
   loadDarkModeToggleIcon () {

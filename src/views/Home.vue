@@ -1,9 +1,9 @@
 <template>
   <div class="home">
     <Spinner :isLoading="carouselLoading || featurettesLoading">
-      <Carousel :id="'categoryCarousel'" :imageDir="'home/'" :slides="carouselSlides" />
+      <Carousel :id="'categoryCarousel'" :imagePath="'home/carousel/'" :slides="carouselSlides" />
       <div class="container">
-        <Featurettes :content="featurettesContent" />
+        <Featurettes :content="featurettesContent" :imagePath="'home/featurettes/'" />
       </div>
     </Spinner>
   </div>

@@ -33,7 +33,7 @@
           <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             <div v-for="card in filteredCards()" :key="card.title" class="col">
               <div class="card shadow-sm">
-                <img :src="resolveThumbnailURL(card.thumbnail)" />
+                <FirebaseImage :path="'portfolio/thumbnails/' + card.thumbnail" />
                 <div class="card-body">
                   <h5 class="card-title">{{card.title}}</h5>
                   <p class="card-text">{{card.description}}</p>
@@ -127,6 +127,7 @@ import firebase from 'firebase/app'
 import 'firebase/firestore'
 
 import Spinner from '../components/Spinner.vue'
+import FirebaseImage from '../components/FirebaseImage.vue'
 
 import Link from '../common/Link'
 import StringHelper from '../common/StringHelper'
@@ -166,7 +167,7 @@ interface FiltersParams {
     darkMode: Boolean
   },
   components: {
-    Spinner
+    Spinner, FirebaseImage
   },
   mixins: [StringHelper, DateHelper],
   watch: {
@@ -214,10 +215,6 @@ export default class Portfolio extends Vue {
       this.loadFiltersFromParams()
       this.updateFiltersParams()
     })
-  }
-
-  resolveThumbnailURL (thumbnail: string): string {
-    return `https://firebasestorage.googleapis.com/v0/b/mhogar-dev.appspot.com/o/portfolio%2Fthumbnails%2F${thumbnail}?alt=media`
   }
 
   outlineButtonClass (): string {

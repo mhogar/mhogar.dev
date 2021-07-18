@@ -8,7 +8,7 @@
           <p class="lead">{{item.lead}}</p>
         </div>
         <div :class="'col-md-5 d-flex justify-content-center order-md-' + calcColumnOrder(index + 1)">
-          <img :src="resolveImageURL(item.image)" />
+          <FirebaseImage :path="imagePath + item.image" />
         </div>
       </div>
     </div>
@@ -54,6 +54,8 @@
 import { PropType } from '@vue/runtime-core'
 import { Options, Vue } from 'vue-class-component'
 
+import FirebaseImage from '../components/FirebaseImage.vue'
+
 export interface FeaturetteContent {
   heading: string,
   subheading: string,
@@ -63,15 +65,14 @@ export interface FeaturetteContent {
 
 @Options({
   props: {
-    content: Array as PropType<FeaturetteContent[]>
-  }
+    content: Array as PropType<FeaturetteContent[]>,
+    imagePath: String
+  },
+  components: { FirebaseImage }
 })
 export default class Featurettes extends Vue {
   content!: FeaturetteContent[]
-
-  resolveImageURL (image: string) {
-    return `https://firebasestorage.googleapis.com/v0/b/mhogar-dev.appspot.com/o/home%2Ffeaturettes%2F${image}?alt=media`
-  }
+  imagePath!: string
 
   calcColumnOrder (index: number): number {
     return (index % 2) + 1
