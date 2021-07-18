@@ -29,25 +29,27 @@
     </section>
     <div class="album py-5">
       <div class="container">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-          <div v-for="card in filteredCards()" :key="card.title" class="col">
-            <div class="card shadow-sm">
-              <img :src="loadThumbnail(card.thumbnail)" />
-              <div class="card-body">
-                <h5 class="card-title">{{card.title}}</h5>
-                <p class="card-text">{{card.description}}</p>
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="btn-group">
-                    <a v-for="link in card.buttonLinks" :key="link.url" :class="'btn btn-sm ' + outlineButtonClass()" :href="link.url" target="_blank">
-                      {{link.text}}
-                    </a>
+        <Spinner :isLoading="cardsLoading">
+          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            <div v-for="card in filteredCards()" :key="card.title" class="col">
+              <div class="card shadow-sm">
+                <FirebaseImage :path="'portfolio/thumbnails/' + card.thumbnail" />
+                <div class="card-body">
+                  <h5 class="card-title">{{card.title}}</h5>
+                  <p class="card-text">{{card.description}}</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                      <a v-for="link in card.buttonLinks" :key="link.url" :class="'btn btn-sm ' + outlineButtonClass()" :href="link.url" target="_blank">
+                        {{link.text}}
+                      </a>
+                    </div>
+                    <small class="text-muted">{{formatDateMonthYear(card.date)}}</small>
                   </div>
-                  <small class="text-muted">{{formatDateMonthYear(card.date)}}</small>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </Spinner>
       </div>
     </div>
   </div>
@@ -121,18 +123,21 @@ h1 {
 <script lang="ts">
 
 import { Options, Vue } from 'vue-class-component'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
+
+import Spinner from '../components/Spinner.vue'
+import FirebaseImage from '../components/FirebaseImage.vue'
+
 import Link from '../common/Link'
 import StringHelper from '../common/StringHelper'
 import DateHelper from '../common/DateHelper'
-
-// @ts-ignore
-import cardsJson from '@/assets/portfolio/cards.json'
 
 export interface PortfolioCard {
   title: string,
   description: string,
   category: string,
-  date: Date,
+  date: string,
   relevance: number,
   thumbnail: string,
   buttonLinks: Link[]
@@ -161,6 +166,9 @@ interface FiltersParams {
   props: {
     darkMode: Boolean
   },
+  components: {
+    Spinner, FirebaseImage
+  },
   mixins: [StringHelper, DateHelper],
   watch: {
     filters: {
@@ -181,11 +189,10 @@ interface FiltersParams {
 })
 export default class Portfolio extends Vue {
   darkMode!: boolean
-
   cards: PortfolioCard[] = []
-
   categories: Map<string, CategoryData> = new Map<string, CategoryData>()
   categoriesInitialized: boolean = false
+  cardsLoading: boolean = true
 
   filters: Filters = {
     order: 'Relevance',
@@ -193,28 +200,21 @@ export default class Portfolio extends Vue {
   }
 
   created () {
-    cardsJson.forEach(cardJson => {
-      this.cards.push({
-        title: cardJson.title,
-        description: cardJson.description,
-        category: cardJson.category,
-        // @ts-ignore
-        date: this.parseDate(cardJson.date),
-        relevance: cardJson.relevance,
-        thumbnail: cardJson.thumbnail,
-        buttonLinks: cardJson.buttonLinks
+    // load cards from firebase
+    firebase.firestore().collection('projects').onSnapshot(snapshot => {
+      this.cards = []
+
+      snapshot.docs.forEach(doc => {
+        this.cards.push(doc.data() as PortfolioCard)
       })
+      this.cardsLoading = false
+
+      this.initCategories()
+      this.categoriesInitialized = true
+
+      this.loadFiltersFromParams()
+      this.updateFiltersParams()
     })
-
-    this.initCategories()
-    this.categoriesInitialized = true
-
-    this.loadFiltersFromParams()
-    this.updateFiltersParams()
-  }
-
-  loadThumbnail (thumbnail: string): string {
-    return require('@/assets/portfolio/thumbnails/' + thumbnail)
   }
 
   outlineButtonClass (): string {
@@ -259,7 +259,7 @@ export default class Portfolio extends Vue {
     }
     if (this.filters.order === 'Date') {
       // @ts-ignore
-      return filteredCards.sort((a, b) => -this.filters.orderDirection * this.dateCompare(a.date, b.date))
+      return filteredCards.sort((a, b) => -this.filters.orderDirection * this.stringCompare(a.date, b.date))
     }
     // relevance
     return filteredCards.sort((a, b) => this.filters.orderDirection * (a.relevance - b.relevance))
@@ -313,7 +313,7 @@ export default class Portfolio extends Vue {
       params[key] = value.include.toString()
     })
 
-    this.$router.push({ path: 'portfolio', query: params })
+    this.$router.replace({ name: 'Portfolio', query: params })
   }
 }
 

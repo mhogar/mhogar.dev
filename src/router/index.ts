@@ -33,6 +33,10 @@ export default createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
   scrollBehavior (to, from, savedPosition): any {
+    if (to.path === from.path) {
+      return null
+    }
+
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (savedPosition) {

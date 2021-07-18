@@ -1,5 +1,6 @@
 <template>
     <div class="blog-post">
+      <Spinner :isLoading="postLoading">
         <div class="container blog-body">
             <div class="blog-post">
               <div v-if="post">
@@ -12,6 +13,7 @@
               <a class="link-secondary" href="#" @click.prevent="$router.back()">Back</a>
             </div>
         </div>
+      </Spinner>
     </div>
 </template>
 
@@ -75,27 +77,54 @@
 <script lang="ts">
 
 import { Options, Vue } from 'vue-class-component'
-import BlogPost from './Blog.vue'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
+
+import Spinner from '../components/Spinner.vue'
+
+import { BlogPost } from './Blog.vue'
 import DateHelper from '../common/DateHelper'
 
-// @ts-ignore
-import posts from '@/assets/blog/posts.json'
+interface BlogPostContent {
+  paragraphs: string[]
+}
 
 @Options({
+  components: { Spinner },
   mixins: [DateHelper]
 })
-export default class Portfolio extends Vue {
-  post: BlogPost = {} as BlogPost
+export default class BlogPostComponent extends Vue {
+  postLoading: boolean = true
+
+  post: BlogPost | null = null
   paragraphs: string[] = []
 
   created () {
-    const id = this.$route.params.id
+    const id = this.$route.params.id as string
+    const firestore = firebase.firestore()
 
-    // @ts-ignore
-    this.post = posts[id]
-    if (this.post) {
-      this.paragraphs = require('@/assets/blog/posts/' + id + '.json')
-    }
+    // load post from firebase
+    firestore.collection('blog-posts').doc(id).onSnapshot(postDoc => {
+      if (!postDoc.exists) {
+        this.postLoading = false
+        return
+      }
+      this.post = postDoc.data() as BlogPost
+
+      // load the paragraphs
+      firestore.doc(`blog-posts/${id}/content/data`).onSnapshot(dataDoc => {
+        if (!this.post) {
+          return
+        }
+
+        const content = dataDoc.data() as BlogPostContent
+
+        this.paragraphs = [this.post.lead]
+        this.paragraphs.push(...content.paragraphs)
+
+        this.postLoading = false
+      })
+    })
   }
 }
 

@@ -104,10 +104,35 @@ footer {
 <script lang="ts">
 
 import '../node_modules/bootstrap/dist/js/bootstrap.min.js'
+
 import { Vue } from 'vue-class-component'
+import firebase from 'firebase/app'
 
 export default class App extends Vue {
   darkMode: boolean = true
+
+  created () {
+    // initialize Firebase
+    firebase.initializeApp({
+      apiKey: 'AIzaSyCy7-2qn2WZfFP8F_HX8mI4fPsqZtxEu-I',
+      authDomain: 'mhogar-dev.firebaseapp.com',
+      projectId: 'mhogar-dev',
+      storageBucket: 'mhogar-dev.appspot.com',
+      messagingSenderId: '1054564120082',
+      appId: '1:1054564120082:web:7c86d82c13ba5e01768acb'
+    })
+
+    // enable debug token if debug build, then include app-check module
+    if (process.env.NODE_ENV === 'development') {
+      // @ts-ignore
+      self.FIREBASE_APPCHECK_DEBUG_TOKEN = true
+      console.log('FIREBASE_APPCHECK_DEBUG_TOKEN -> true')
+    }
+    require('firebase/app-check')
+
+    // activate app check
+    firebase.appCheck().activate('6LcCxaQbAAAAANVgoMY6IOyxOnV848ZWBGKupVVH')
+  }
 
   loadDarkModeToggleIcon () {
     if (this.darkMode) {
