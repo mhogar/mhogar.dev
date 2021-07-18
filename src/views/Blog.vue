@@ -1,27 +1,29 @@
 <template>
   <div class="blog">
-    <div class="container">
-      <div class="nav-scroller py-1 mb-2">
-        <nav class="nav">
-          <span v-for="kv in categoryMap" :key="kv[0]" :class="'p-2 link-secondary ' + linkSelected(kv[0])"
-            @click.prevent="updateSelectedCategory(kv[0])">
-            <a class="link-secondary" href="#">{{capitalize(kv[0])}}</a> ({{kv[1].count}})
-          </span>
-        </nav>
-      </div>
-    </div>
-    <div class="container blog-body">
-      <hr class="seperator" />
-      <div v-for="post in filteredPosts()" :key="post.id">
-        <div class="blog-post">
-          <h2 class="blog-post-title">{{post.title}}</h2>
-          <p class="blog-post-meta">{{formatDateDayMonthYear(post.date)}}</p>
-          <p>{{post.lead}}</p>
-          <router-link :to="'/blog/' + post.id" class="link-secondary">View Full Post</router-link>
+    <Spinner :isLoading="postsLoading">
+      <div class="container">
+        <div class="nav-scroller py-1 mb-2">
+          <nav class="nav">
+            <span v-for="kv in categoryMap" :key="kv[0]" :class="'p-2 link-secondary ' + linkSelected(kv[0])"
+              @click.prevent="updateSelectedCategory(kv[0])">
+              <a class="link-secondary" href="#">{{capitalize(kv[0])}}</a> ({{kv[1].count}})
+            </span>
+          </nav>
         </div>
-        <hr class="seperator" />
       </div>
-    </div>
+      <div class="container blog-body">
+        <hr class="seperator" />
+        <div v-for="post in filteredPosts()" :key="post.id">
+          <div class="blog-post">
+            <h2 class="blog-post-title">{{post.title}}</h2>
+            <p class="blog-post-meta">{{formatDateDayMonthYear(post.date)}}</p>
+            <p>{{post.lead}}</p>
+            <router-link :to="'/blog/' + post.id" class="link-secondary">View Full Post</router-link>
+          </div>
+          <hr class="seperator" />
+        </div>
+      </div>
+    </Spinner>
   </div>
 </template>
 
@@ -90,11 +92,13 @@
 <script lang="ts">
 
 import { Options, Vue } from 'vue-class-component'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
+
+import Spinner from '../components/Spinner.vue'
+
 import StringHelper from '../common/StringHelper'
 import DateHelper from '../common/DateHelper'
-
-// @ts-ignore
-import posts from '@/assets/blog/posts.json'
 
 export interface BlogPost {
   id: string
@@ -110,39 +114,52 @@ interface CategoryData {
 }
 
 @Options({
+  components: { Spinner },
   mixins: [StringHelper, DateHelper]
 })
-export default class Portfolio extends Vue {
+export default class BlogComponent extends Vue {
+  postsLoading: boolean = true
+
   categoryMap: Map<string, CategoryData> = new Map<string, CategoryData>()
   selectedCategory: string = ''
 
   created () {
     this.loadSelectedCategory()
 
-    // @ts-ignore
-    Object.entries(posts).forEach(kv => {
-      const post : BlogPost = kv[1]
+    // load posts from firebase
+    firebase.firestore().collection('blog-posts').onSnapshot(snapshot => {
+      this.categoryMap.clear()
 
-      const data = this.categoryMap.get(post.category)
-      if (!data) {
-        this.categoryMap.set(post.category, {
-          posts: [post],
-          count: 1
-        })
-      } else {
-        data.posts.push(post)
-        data.count += 1
+      // create the posts and store in category map
+      snapshot.docs.forEach(doc => {
+        const post = doc.data() as BlogPost
+        post.id = doc.id
+
+        const data = this.categoryMap.get(post.category)
+        if (!data) {
+          this.categoryMap.set(post.category, {
+            posts: [post],
+            count: 1
+          })
+        } else {
+          data.posts.push(post)
+          data.count += 1
+        }
+      })
+
+      // sort the posts by date
+      this.categoryMap.forEach(value => {
+        // @ts-ignore
+        value.posts.sort((a, b) => this.stringCompare(b.date, a.date))
+      })
+
+      // if selected category is invalid, choose the first in the map
+      if (!this.categoryMap.has(this.selectedCategory)) {
+        this.updateSelectedCategory(this.categoryMap.keys().next().value)
       }
-    })
 
-    this.categoryMap.forEach(value => {
-      // @ts-ignore
-      value.posts.sort((a, b) => this.stringCompare(b.date, a.date))
+      this.postsLoading = false
     })
-
-    if (!this.categoryMap.has(this.selectedCategory)) {
-      this.updateSelectedCategory(this.categoryMap.keys().next().value)
-    }
   }
 
   loadSelectedCategory () {
