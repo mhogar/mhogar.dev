@@ -5,7 +5,7 @@
     </div>
     <div class="carousel-inner">
       <div v-for="(slide, index) in slides" :key="slide.title" :class="'carousel-item ' + firstItemActive(index)">
-        <img :src="loadImage(slide.image)" />
+        <img :src="resolveImageURL(slide.image)" />
 
         <div class="container">
           <div class="carousel-caption">
@@ -66,6 +66,7 @@
 
 import { PropType } from '@vue/runtime-core'
 import { Options, Vue } from 'vue-class-component'
+
 import Link from '../common/Link'
 
 export interface CarouselSlide {
@@ -91,8 +92,8 @@ export default class Carousel extends Vue {
     return index === 0 ? 'active' : ''
   }
 
-  loadImage (image: string): string {
-    return require('@/assets/' + this.imageDir + image)
+  resolveImageURL (image: string): string {
+    return `https://firebasestorage.googleapis.com/v0/b/mhogar-dev.appspot.com/o/home%2Fcarousel%2F${image}?alt=media`
   }
 }
 

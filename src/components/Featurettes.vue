@@ -8,7 +8,7 @@
           <p class="lead">{{item.lead}}</p>
         </div>
         <div :class="'col-md-5 d-flex justify-content-center order-md-' + calcColumnOrder(index + 1)">
-          <img :src="loadImage(item.image)" width="250" height="250" />
+          <img :src="resolveImageURL(item.image)" />
         </div>
       </div>
     </div>
@@ -69,8 +69,8 @@ export interface FeaturetteContent {
 export default class Featurettes extends Vue {
   content!: FeaturetteContent[]
 
-  loadImage (image: string) {
-    return require('../assets/icons/' + image)
+  resolveImageURL (image: string) {
+    return `https://firebasestorage.googleapis.com/v0/b/mhogar-dev.appspot.com/o/home%2Ffeaturettes%2F${image}?alt=media`
   }
 
   calcColumnOrder (index: number): number {
