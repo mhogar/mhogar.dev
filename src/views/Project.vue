@@ -4,7 +4,7 @@
       <div class="container">
         <div v-if="content">
           <div class="row">
-            <div class="col col-md-5">
+            <div class="col col-md-6">
               <h1 class="title">{{content.title}}</h1>
               <p class="lead">{{content.description}}</p>
               <div class="button-links">
@@ -13,8 +13,8 @@
                 </a>
               </div>
             </div>
-            <div class="col col-md-7">
-              <FirebaseImage class="thumbnail" width="720" :path="'portfolio/thumbnails/' + content.thumbnail" />
+            <div class="col col-md-6">
+              <FirebaseImage class="thumbnail" width="650" :path="'portfolio/thumbnails/' + content.thumbnail" />
             </div>
           </div>
           <hr />
@@ -52,7 +52,6 @@
 }
 
 .thumbnail {
-  margin: 1rem;
   border-radius: .3em;
 }
 
@@ -79,11 +78,19 @@
   .badge {
     background-color: $light;
   }
+
+  .thumbnail {
+    box-shadow: 0 1rem 3rem $drop-shadow-light !important;
+  }
 }
 
 .mode-dark {
   .badge {
     background-color: $dark;
+  }
+
+  .thumbnail {
+    box-shadow: 0 1rem 3rem $drop-shadow-dark !important;
   }
 }
 
