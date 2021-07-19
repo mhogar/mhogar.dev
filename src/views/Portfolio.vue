@@ -138,7 +138,9 @@ export interface ProjectContent {
   version: string,
   relevance: number,
   thumbnail: string,
-  buttonLinks: Link[]
+  buttonLinks: Link[],
+  additionalThoughts?: string,
+  relatedBlogPosts?: Link[]
 }
 
 interface CategoryData {

@@ -4,7 +4,7 @@
       <div class="container">
         <div v-if="content">
           <div class="row">
-            <div class="col col-md-6">
+            <div class="col col-md-6 header-text">
               <h1 class="title">{{content.title}}</h1>
               <p class="lead">{{content.description}}</p>
               <div class="button-links">
@@ -35,6 +35,18 @@
             </div>
           </div>
           <hr />
+          <div v-if="content.additionalThoughts" class="section">
+            <h4>Additional Thoughts</h4>
+            <p>{{content.additionalThoughts}}</p>
+          </div>
+          <div v-if="content.relatedBlogPosts" class="section">
+            <h4>Related Blog Posts</h4>
+            <ui>
+              <li v-for="link in content.relatedBlogPosts" :key="link.url">
+                <router-link :to="'/blog/' + link.url">{{link.text}}</router-link>
+              </li>
+            </ui>
+          </div>
         </div>
         <h1 v-else>Project Not Found.</h1>
       </div>
@@ -45,6 +57,10 @@
 <style lang="scss" scoped>
 
 @import "../assets/theme.scss";
+
+.section li {
+  margin-left: 2rem;
+}
 
 .project {
   padding-top: 1rem;
@@ -72,6 +88,15 @@
 
 .info-grid .header {
   margin-bottom: 0.5rem;
+}
+
+.header-text {
+  padding-right: 2rem;
+}
+
+.section {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 .mode-light {
