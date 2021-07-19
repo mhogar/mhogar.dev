@@ -124,23 +124,16 @@ import 'firebase/firestore'
 import Spinner from '../components/Spinner.vue'
 import FirebaseImage from '../components/FirebaseImage.vue'
 
-import Link from '../common/Link'
 import StringHelper from '../common/StringHelper'
 import DateHelper from '../common/DateHelper'
 
-export interface ProjectContent {
+export interface ProjectCard {
   id: string,
   title: string,
-  description: string,
   category: string,
-  status: string,
   date: string,
-  version: string,
-  relevance: number,
   thumbnail: string,
-  buttonLinks: Link[],
-  additionalThoughts?: string,
-  relatedBlogPosts?: Link[]
+  relevance: number,
 }
 
 interface CategoryData {
@@ -180,7 +173,7 @@ interface FiltersParams {
     categories: {
       deep: true,
       handler: function (oldValue, newValue) {
-        if (this.categoriesInitialized) {
+        if (!this.cardsLoading) {
           this.updateFiltersParams()
         }
       }
@@ -189,9 +182,8 @@ interface FiltersParams {
 })
 export default class Portfolio extends Vue {
   darkMode!: boolean
-  cards: ProjectContent[] = []
+  cards: ProjectCard[] = []
   categories: Map<string, CategoryData> = new Map<string, CategoryData>()
-  categoriesInitialized: boolean = false
   cardsLoading: boolean = true
 
   filters: Filters = {
@@ -205,18 +197,17 @@ export default class Portfolio extends Vue {
       this.cards = []
 
       snapshot.docs.forEach(doc => {
-        const card = doc.data() as ProjectContent
+        const card = doc.data() as ProjectCard
         card.id = doc.id
 
         this.cards.push(card)
       })
-      this.cardsLoading = false
 
       this.initCategories()
-      this.categoriesInitialized = true
-
       this.loadFiltersFromParams()
       this.updateFiltersParams()
+
+      this.cardsLoading = false
     })
   }
 
@@ -247,10 +238,10 @@ export default class Portfolio extends Vue {
     return 'Descending'
   }
 
-  filteredCards (): ProjectContent[] {
-    const filteredCards: ProjectContent[] = []
+  filteredCards (): ProjectCard[] {
+    const filteredCards: ProjectCard[] = []
 
-    this.cards.forEach((card: ProjectContent) => {
+    this.cards.forEach((card: ProjectCard) => {
       if (this.categories.get(card.category)?.include) {
         filteredCards.push(card)
       }
@@ -271,7 +262,7 @@ export default class Portfolio extends Vue {
   initCategories () {
     this.categories.clear()
 
-    this.cards.forEach((card: ProjectContent) => {
+    this.cards.forEach((card: ProjectCard) => {
       const data = this.categories.get(card.category)
 
       if (!data) {
