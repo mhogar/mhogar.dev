@@ -5,7 +5,7 @@
     </div>
     <div class="carousel-inner">
       <div v-for="(slide, index) in slides" :key="slide.title" :class="'carousel-item ' + firstItemActive(index)">
-        <FirebaseImage :path="imagePath + slide.image" />
+        <FirebaseImage class="background-img" :path="imagePath + slide.image" :useAsBackground="true" />
 
         <div class="container">
           <div class="carousel-caption">
@@ -43,12 +43,12 @@
 .carousel-item {
   height: 32rem;
 }
-.carousel-item > img {
-  /* position: absolute; */
-  /* background-position-x: center; */
-  /* background-position-y: top; */
+.carousel-item > .background-img {
+  background-position-x: center;
+  background-position-y: top;
   min-width: 100%;
-  /*height: 32rem;*/
+  min-height: 100%;
+  background-repeat: no-repeat;
 }
 
 @media (max-width: 40em) {
