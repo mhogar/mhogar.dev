@@ -41,11 +41,11 @@
           </div>
           <div v-if="content.relatedBlogPosts" class="section">
             <h4>Related Blog Posts</h4>
-            <ui>
+            <ul>
               <li v-for="link in content.relatedBlogPosts" :key="link.url">
                 <router-link :to="'/blog/' + link.url">{{link.text}}</router-link>
               </li>
-            </ui>
+            </ul>
           </div>
         </div>
         <h1 v-else>Project Not Found.</h1>
@@ -57,10 +57,6 @@
 <style lang="scss" scoped>
 
 @import "../assets/theme.scss";
-
-.section li {
-  margin-left: 2rem;
-}
 
 .project {
   padding-top: 1rem;
