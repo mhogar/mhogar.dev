@@ -33,16 +33,11 @@
           <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             <div v-for="card in filteredCards()" :key="card.title" class="col">
               <div class="card shadow-sm">
+                <router-link :to="'/portfolio/' + card.id" class="stretched-link"></router-link>
                 <FirebaseImage :path="'portfolio/thumbnails/' + card.thumbnail" />
                 <div class="card-body">
                   <h5 class="card-title">{{card.title}}</h5>
-                  <p class="card-text">{{card.description}}</p>
                   <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
-                      <a v-for="link in card.buttonLinks" :key="link.url" :class="'btn btn-sm ' + outlineButtonClass()" :href="link.url" target="_blank">
-                        {{link.text}}
-                      </a>
-                    </div>
                     <small class="text-muted">{{formatDateMonthYear(card.date)}}</small>
                   </div>
                 </div>
@@ -134,6 +129,7 @@ import StringHelper from '../common/StringHelper'
 import DateHelper from '../common/DateHelper'
 
 export interface ProjectContent {
+  id: string,
   title: string,
   description: string,
   category: string,
@@ -207,7 +203,10 @@ export default class Portfolio extends Vue {
       this.cards = []
 
       snapshot.docs.forEach(doc => {
-        this.cards.push(doc.data() as ProjectContent)
+        const card = doc.data() as ProjectContent
+        card.id = doc.id
+
+        this.cards.push(card)
       })
       this.cardsLoading = false
 
