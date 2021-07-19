@@ -1,5 +1,6 @@
 <template>
-    <img :src="url" />
+    <div v-if="useAsBackground" :style="`background-image: url(${url});`" />
+    <img v-else :src="url" />
 </template>
 
 <script lang="ts">
@@ -10,11 +11,13 @@ import 'firebase/storage'
 
 @Options({
   props: {
-    path: String
+    path: String,
+    useAsBackground: Boolean
   }
 })
 export default class FirebaseImage extends Vue {
   path!: string
+  useAsBackground: boolean = false
   url: string = ''
   loadingImage: boolean = true
 

@@ -29,21 +29,22 @@
   font-weight: 300;
   line-height: 1;
   letter-spacing: -.05rem;
+  font-size: 3.5rem;
 }
 
 .text-muted {
   color: $primary !important;
 }
 
-@media (min-width: 40em) {
+@media (max-width: 40em) {
   .featurette-heading {
-    font-size: 50px;
+    font-size: 2.5rem;
   }
 }
 
 @media (min-width: 62em) {
   .featurette-heading {
-    margin-top: 7rem;
+    margin-top: 3rem;
   }
 }
 
