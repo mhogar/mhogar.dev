@@ -133,11 +133,13 @@ import Link from '../common/Link'
 import StringHelper from '../common/StringHelper'
 import DateHelper from '../common/DateHelper'
 
-export interface PortfolioCard {
+export interface ProjectContent {
   title: string,
   description: string,
   category: string,
+  status: string,
   date: string,
+  version: string,
   relevance: number,
   thumbnail: string,
   buttonLinks: Link[]
@@ -189,7 +191,7 @@ interface FiltersParams {
 })
 export default class Portfolio extends Vue {
   darkMode!: boolean
-  cards: PortfolioCard[] = []
+  cards: ProjectContent[] = []
   categories: Map<string, CategoryData> = new Map<string, CategoryData>()
   categoriesInitialized: boolean = false
   cardsLoading: boolean = true
@@ -205,7 +207,7 @@ export default class Portfolio extends Vue {
       this.cards = []
 
       snapshot.docs.forEach(doc => {
-        this.cards.push(doc.data() as PortfolioCard)
+        this.cards.push(doc.data() as ProjectContent)
       })
       this.cardsLoading = false
 
@@ -244,10 +246,10 @@ export default class Portfolio extends Vue {
     return 'Descending'
   }
 
-  filteredCards (): PortfolioCard[] {
-    const filteredCards: PortfolioCard[] = []
+  filteredCards (): ProjectContent[] {
+    const filteredCards: ProjectContent[] = []
 
-    this.cards.forEach((card: PortfolioCard) => {
+    this.cards.forEach((card: ProjectContent) => {
       if (this.categories.get(card.category)?.include) {
         filteredCards.push(card)
       }
@@ -268,7 +270,7 @@ export default class Portfolio extends Vue {
   initCategories () {
     this.categories.clear()
 
-    this.cards.forEach((card: PortfolioCard) => {
+    this.cards.forEach((card: ProjectContent) => {
       const data = this.categories.get(card.category)
 
       if (!data) {
