@@ -14,7 +14,7 @@
               </div>
             </div>
             <div class="col col-md-6">
-              <FirebaseImage class="thumbnail" width="650" :path="'portfolio/thumbnails/' + content.thumbnail" />
+              <FirebaseImage class="thumbnail" :path="'portfolio/thumbnails/' + content.thumbnail" />
             </div>
           </div>
           <hr />
@@ -47,6 +47,7 @@
               </li>
             </ul>
           </div>
+          <a href="#" @click.prevent="$router.back()">Back</a>
         </div>
         <h1 v-else>Project Not Found.</h1>
       </div>
@@ -65,6 +66,9 @@
 
 .thumbnail {
   border-radius: .3em;
+  min-width: 300px;
+  max-width: 100%;
+  margin-top: 1rem;
 }
 
 .title {
@@ -73,7 +77,7 @@
 }
 
 .button-links .btn {
-  margin-right: 1rem;
+  margin-right: 0.5rem;
 }
 
 .info-grid {
@@ -112,6 +116,12 @@
 
   .thumbnail {
     box-shadow: 0 1rem 3rem $drop-shadow-dark !important;
+  }
+}
+
+@media (max-width: 40em) {
+  .title {
+    font-size: 2.5rem;
   }
 }
 
