@@ -23,6 +23,9 @@
               <img :src="loadDarkModeToggleIcon()" alt="Dark Mode Toggle" width="32" height="32">
             </a>
           </div>
+          <div v-if="userLoggedIn" class="nav-item">
+            <router-link to="/admin" class="nav-link">Admin</router-link>
+          </div>
         </div>
       </nav>
       <router-view v-slot="{ Component }">
@@ -107,9 +110,11 @@ import '../node_modules/bootstrap/dist/js/bootstrap.min.js'
 
 import { Vue } from 'vue-class-component'
 import firebase from 'firebase/app'
+import 'firebase/auth'
 
 export default class App extends Vue {
   darkMode: boolean = true
+  userLoggedIn: boolean = false
 
   created () {
     // initialize Firebase
@@ -132,6 +137,11 @@ export default class App extends Vue {
 
     // activate app check
     firebase.appCheck().activate('6LcCxaQbAAAAANVgoMY6IOyxOnV848ZWBGKupVVH')
+
+    // listen for auth state changes
+    firebase.auth().onAuthStateChanged(user => {
+      this.userLoggedIn = user !== null
+    })
   }
 
   loadDarkModeToggleIcon () {

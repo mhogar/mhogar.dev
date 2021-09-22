@@ -28,6 +28,11 @@ const routes = [
     component: () => import('../views/BlogPost.vue')
   },
   {
+    path: '/admin',
+    name: 'Admin',
+    component: () => import('../views/Admin.vue')
+  },
+  {
     path: '/:catchAll(.*)',
     name: 'NotFound',
     component: () => import('../views/NotFound.vue')
