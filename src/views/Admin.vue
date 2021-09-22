@@ -1,14 +1,16 @@
 <template>
   <div class="page justify-content-center">
     <div class="container">
-      <Spinner :isLoading="loading">
-        <div v-if="errMessage !== ''" class="alert alert-danger">{{ error }}</div>
+      <Spinner :isLoading="initialLoad || loading">
+        <div v-if="errMessage" class="alert alert-danger">
+          Authentication Error: "{{ errMessage }}"
+        </div>
         <!--https://api.auth.mhogar.dev/token?client_id=553d9fa7-3cbb-4a46-b672-d0beaf9df004-->
         <a v-if="!currentUser" class="btn btn-lg btn-primary" href="http://localhost:3000/token?client_id=5d45accb-9adb-4dc9-9d74-2c534ffc4f31">
           Login as Admin
         </a>
         <div v-else>
-          <h3>Logged in as "{{ currentUser.uid }}".</h3>
+          <h3 class="user-text">Logged in as "{{ currentUser.uid }}"</h3>
           <button class="btn btn-lg btn-primary" @click="logout()">Logout</button>
         </div>
       </Spinner>
@@ -24,6 +26,10 @@
   text-align: center;
   padding-top: 6rem;
   padding-bottom: 6rem;
+}
+
+.user-text {
+  margin-bottom: 1.5rem;
 }
 
 </style>
@@ -42,6 +48,7 @@ import 'firebase/auth'
   }
 })
 export default class extends Vue {
+  initialLoad: boolean = true
   loading: boolean = false
 
   currentUser: firebase.User | null = null
@@ -69,12 +76,14 @@ export default class extends Vue {
     // listen for auth state changes
     firebase.auth().onAuthStateChanged(user => {
       this.currentUser = user
+      this.initialLoad = false
     })
   }
 
   logout () {
     this.loading = true
     firebase.auth().signOut().finally(() => {
+      this.errMessage = ''
       this.loading = false
     })
   }
