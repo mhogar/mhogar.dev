@@ -5,8 +5,7 @@
         <div v-if="errMessage" class="alert alert-danger">
           Authentication Error: "{{ errMessage }}"
         </div>
-        <!--https://api.auth.mhogar.dev/token?client_id=553d9fa7-3cbb-4a46-b672-d0beaf9df004-->
-        <a v-if="!currentUser" class="btn btn-lg btn-primary" href="http://localhost:3000/token?client_id=5d45accb-9adb-4dc9-9d74-2c534ffc4f31">
+        <a v-if="!currentUser" class="btn btn-lg btn-primary" :href="loginLink()">
           Login as Admin
         </a>
         <div v-else>
@@ -78,6 +77,18 @@ export default class extends Vue {
       this.currentUser = user
       this.initialLoad = false
     })
+  }
+
+  loginLink () {
+    // production id
+    let clientID = '553d9fa7-3cbb-4a46-b672-d0beaf9df004'
+
+    // development id
+    if (process.env.NODE_ENV === 'development') {
+      clientID = 'c8dd1aa9-70de-4a63-9912-a2bb0517211f'
+    }
+
+    return 'https://api.auth.mhogar.dev/token?client_id=' + clientID
   }
 
   logout () {
