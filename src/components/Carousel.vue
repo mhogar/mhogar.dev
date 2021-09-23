@@ -5,7 +5,7 @@
     </div>
     <div class="carousel-inner">
       <div v-for="(slide, index) in slides" :key="slide.title" :class="'carousel-item ' + firstItemActive(index)">
-        <FirebaseImage class="background-img" :path="imagePath + slide.image" :useAsBackground="true" />
+        <StaticImage class="background-img" :path="'carousel/'" :image="slide.image" :useAsBackground="true" />
 
         <div class="container">
           <div class="carousel-caption">
@@ -67,7 +67,7 @@
 import { PropType } from '@vue/runtime-core'
 import { Options, Vue } from 'vue-class-component'
 
-import FirebaseImage from './FirebaseImage.vue'
+import StaticImage from './StaticImage.vue'
 
 import Link from '../common/Link'
 
@@ -81,14 +81,12 @@ export interface CarouselSlide {
 @Options({
   props: {
     id: String,
-    imagePath: String,
     slides: Array as PropType<CarouselSlide[]>
   },
-  components: { FirebaseImage }
+  components: { StaticImage }
 })
 export default class Carousel extends Vue {
   id!: string
-  imagePath!: string
   slides!: CarouselSlide[]
 
   firstItemActive (index: number): string {
