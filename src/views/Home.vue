@@ -1,11 +1,9 @@
 <template>
   <div class="home">
-    <Spinner :isLoading="carouselLoading || featurettesLoading">
-      <Carousel :id="'categoryCarousel'" :imagePath="'home/carousel/'" :slides="carouselSlides" />
-      <div class="container">
-        <Featurettes :content="featurettesContent" :imagePath="'home/featurettes/'" />
-      </div>
-    </Spinner>
+    <Carousel :id="'categoryCarousel'" :imagePath="'home/carousel/'" :slides="carouselSlides" />
+    <div class="container">
+      <Featurettes :content="featurettesContent" :imagePath="'home/featurettes/'" />
+    </div>
   </div>
 </template>
 
@@ -36,8 +34,6 @@
 <script lang="ts">
 
 import { Options, Vue } from 'vue-class-component'
-import firebase from 'firebase/app'
-import 'firebase/firestore'
 
 import Spinner from '../components/Spinner.vue'
 import Carousel, { CarouselSlide } from '../components/Carousel.vue'
@@ -49,34 +45,12 @@ import Featurettes, { FeaturetteContent } from '../components/Featurettes.vue'
   }
 })
 export default class Home extends Vue {
-  carouselLoading: boolean = true
-  featurettesLoading: boolean = true
-
   carouselSlides: CarouselSlide[] = []
   featurettesContent: FeaturetteContent[] = []
 
   created () {
-    // load slides from firebase
-    firebase.firestore().collection('carousel').onSnapshot(snapshot => {
-      this.carouselSlides = []
-
-      snapshot.docs.forEach(doc => {
-        this.carouselSlides.push(doc.data() as CarouselSlide)
-      })
-
-      this.carouselLoading = false
-    })
-
-    // load featurettes from firebase
-    firebase.firestore().collection('featurettes').onSnapshot(snapshot => {
-      this.featurettesContent = []
-
-      snapshot.docs.forEach(doc => {
-        this.featurettesContent.push(doc.data() as FeaturetteContent)
-      })
-
-      this.featurettesLoading = false
-    })
+    this.carouselSlides = require('../assets/data/carousel.json')
+    this.featurettesContent = require('../assets/data/featurettes.json')
   }
 }
 
