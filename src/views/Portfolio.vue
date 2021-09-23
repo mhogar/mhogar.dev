@@ -193,10 +193,10 @@ export default class Portfolio extends Vue {
 
   created () {
     // load cards from firebase
-    firebase.firestore().collection('projects').onSnapshot(snapshot => {
+    firebase.firestore().collection('projects').get().then(collection => {
       this.cards = []
 
-      snapshot.docs.forEach(doc => {
+      collection.docs.forEach(doc => {
         const card = doc.data() as ProjectCard
         card.id = doc.id
 

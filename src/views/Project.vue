@@ -2,7 +2,7 @@
   <div class="project">
     <Spinner :isLoading="contentLoading">
       <div class="container">
-        <div v-if="projectFound">
+        <div v-if="projectID">
           <div class="row">
             <div class="col col-md-6 header-text">
               <h1 v-if="!isEditMode" class="title">{{card.title}}</h1>
@@ -68,12 +68,12 @@
               </li>
             </ul>
           </div>
-          <div v-if="isEditMode" class="section">
+          <Spinner v-if="isEditMode" :isLoading="saving" :centered="false" class="section">
             <div class="btn-group" role="group">
               <button type="button" class="btn btn-secondary" @click="exitEditMode()">Cancel</button>
               <button type="button" class="btn btn-primary" @click="saveEdits()">Save</button>
             </div>
-          </div>
+          </Spinner>
           <div v-else>
             <a href="#" @click.prevent="$router.back()">Back</a>
             <a v-if="userLoggedIn" id="edit-link" href="#" @click.prevent="enterEditMode()">Edit</a>
@@ -203,11 +203,13 @@ interface ProjectContent {
   mixins: [StringHelper, DateHelper]
 })
 export default class Project extends Vue {
-  projectFound: boolean = true
+  projectID: string = ''
+
+  contentLoading: boolean = true
+  saving: boolean = false
 
   card: PortfolioCard = {} as PortfolioCard
   content: ProjectContent = {} as ProjectContent
-  contentLoading: boolean = true
 
   userLoggedIn: boolean = false
   isEditMode: boolean = false
@@ -215,7 +217,7 @@ export default class Project extends Vue {
   editContent: ProjectContent = this.content
 
   created () {
-    const id = this.$route.params.id as string
+    this.projectID = this.$route.params.id as string
     const firestore = firebase.firestore()
 
     // listen for auth state changes
@@ -224,15 +226,15 @@ export default class Project extends Vue {
     })
 
     // load card and content from firebase
-    firestore.doc(`projects/${id}`).onSnapshot(cardDoc => {
+    firestore.doc(`projects/${this.projectID}`).get().then(cardDoc => {
       if (!cardDoc.exists) {
-        this.projectFound = false
+        this.projectID = ''
         this.contentLoading = false
         return
       }
       this.card = cardDoc.data() as PortfolioCard
 
-      firestore.doc(`projects/${id}/content/data`).onSnapshot(contentDoc => {
+      firestore.doc(`projects/${this.projectID}/content/data`).get().then(contentDoc => {
         this.content = contentDoc.data() as ProjectContent
         this.contentLoading = false
       })
@@ -252,11 +254,33 @@ export default class Project extends Vue {
   }
 
   saveEdits () {
-    // overwrite originals with edits
-    this.card = this.editCard
-    this.content = this.editContent
+    const firestore = firebase.firestore()
+    const batch = firestore.batch()
 
-    this.exitEditMode()
+    // update card
+    const cardDoc = firestore.doc(`projects/${this.projectID}`)
+    batch.update(cardDoc, this.editCard)
+
+    // update content
+    const contentDoc = firestore.doc(`projects/${this.projectID}/content/data`)
+    batch.update(contentDoc, this.editContent)
+
+    // save batch
+    this.saving = true
+    batch.commit()
+      .then(() => {
+        // overwrite originals with edits
+        this.card = this.editCard
+        this.content = this.editContent
+
+        this.exitEditMode()
+      })
+      .catch(error => {
+        alert('Error saving content: ' + error)
+      })
+      .finally(() => {
+        this.saving = false
+      })
   }
 }
 
