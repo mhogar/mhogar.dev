@@ -54,7 +54,7 @@
                     <input type="text" class="form-control project-id-input" v-model="newProjectId">
                     <div class="btn-group" role="group">
                       <button type="button" class="btn btn-secondary" @click="isEditMode = false">Cancel</button>
-                      <button type="button" class="btn btn-primary" @click="createProject()">Save</button>
+                      <button type="button" class="btn btn-primary" @click="createProject()">Create</button>
                     </div>
                   </div>
                 </Spinner>
@@ -351,21 +351,36 @@ export default class Portfolio extends Vue {
     const today = new Date()
     const card = {
       title: this.newProjectId,
-      category: 'other',
+      category: 'unknown',
       date: today.getFullYear() + '-' + (today.getMonth() + 1),
       thumbnail: '',
       relevance: 0
     } as ProjectCard
 
-    // create card
+    const firestore = firebase.firestore()
+    const docRef = firestore.doc(`projects/${this.newProjectId}`)
+
+    // check project does not aleardy exist
     this.saving = true
-    firebase.firestore().doc(`projects/${this.newProjectId}`).set(card)
-      .then(() => {
-        this.isEditMode = false
-        this.$router.push('/portfolio/' + this.newProjectId)
+    docRef.get()
+      .then(doc => {
+        if (doc.exists) {
+          alert('Project ID already in use')
+          return
+        }
+
+        // create project
+        docRef.set(card)
+          .then(() => {
+            this.isEditMode = false
+            this.$router.push('/portfolio/' + this.newProjectId)
+          })
+          .catch(error => {
+            alert('Error creating project: ' + error)
+          })
       })
       .catch(error => {
-        alert('Error creating project: ' + error)
+        alert('Error getting project: ' + error)
       })
       .finally(() => {
         this.saving = false

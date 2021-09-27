@@ -248,9 +248,9 @@ export default class Project extends Vue {
           this.content = contentDoc.data() as ProjectContent
         } else {
           this.content = {
-            description: '',
-            status: '',
-            version: '',
+            description: 'Add description...',
+            status: 'unknown',
+            version: 'unknown',
             buttonLinks: []
           } as ProjectContent
         }
