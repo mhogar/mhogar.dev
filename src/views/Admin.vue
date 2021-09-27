@@ -81,11 +81,11 @@ export default class extends Vue {
 
   loginLink () {
     // production id
-    let clientID = '553d9fa7-3cbb-4a46-b672-d0beaf9df004'
+    let clientID = '284cb1ee-9fca-41bf-beca-e67ab0778953'
 
     // development id
     if (process.env.NODE_ENV === 'development') {
-      clientID = 'c8dd1aa9-70de-4a63-9912-a2bb0517211f'
+      clientID = 'f7c0294b-cff9-4606-b706-856c2c9c5d70'
     }
 
     return 'https://api.auth.mhogar.dev/token?client_id=' + clientID

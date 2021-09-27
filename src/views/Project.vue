@@ -12,9 +12,12 @@
               <textarea v-else class="description-edit form-control" rows="3" v-model="editContent.description"></textarea>
 
               <div class="button-links">
-                <a v-for="link in content.buttonLinks" :key="link.url" class="btn btn-lg btn-primary" :href="link.url" target="_blank">
-                  {{link.text}}
-                </a>
+                <div v-if="!isEditMode">
+                  <a v-for="link in content.buttonLinks" :key="link.url" class="btn btn-lg btn-primary" :href="link.url" target="_blank">
+                    {{link.text}}
+                  </a>
+                </div>
+                <LinkListEdit v-else :models="editContent.buttonLinks" />
               </div>
             </div>
             <div class="col col-md-6">
@@ -60,13 +63,14 @@
             <p v-if="!isEditMode">{{content.additionalThoughts}}</p>
             <textarea v-else class="form-control" rows="3" v-model="editContent.additionalThoughts"></textarea>
           </div>
-          <div v-if="content.relatedBlogPosts" class="section">
+          <div v-if="content.relatedBlogPosts?.length > 0 || isEditMode" class="section">
             <h4>Related Blog Posts</h4>
-            <ul>
+            <ul v-if="!isEditMode">
               <li v-for="link in content.relatedBlogPosts" :key="link.url">
                 <router-link :to="'/blog/' + link.url">{{link.text}}</router-link>
               </li>
             </ul>
+            <LinkListEdit v-else :models="editContent.relatedBlogPosts" />
           </div>
           <Spinner v-if="isEditMode" :isLoading="saving" :centered="false" class="section">
             <div class="btn-group" role="group">
@@ -183,6 +187,7 @@ import 'firebase/firestore'
 
 import Spinner from '../components/Spinner.vue'
 import FirebaseImage from '../components/FirebaseImage.vue'
+import LinkListEdit from '../components/LinkListEdit.vue'
 import PortfolioCard from './Portfolio.vue'
 
 import StringHelper from '../common/StringHelper'
@@ -199,7 +204,7 @@ interface ProjectContent {
 }
 
 @Options({
-  components: { Spinner, FirebaseImage },
+  components: { Spinner, FirebaseImage, LinkListEdit },
   mixins: [StringHelper, DateHelper]
 })
 export default class Project extends Vue {
@@ -247,6 +252,8 @@ export default class Project extends Vue {
     // copy original values so the changes can be reverted
     this.editCard = Object.assign({}, this.card)
     this.editContent = Object.assign({}, this.content)
+    this.editContent.buttonLinks = this.editContent.buttonLinks.map(link => Object.assign({}, link))
+    this.editContent.relatedBlogPosts = this.editContent.relatedBlogPosts?.map(link => Object.assign({}, link)) ?? []
   }
 
   exitEditMode () {
