@@ -21,7 +21,7 @@
               </div>
             </div>
             <div class="col col-md-6">
-              <FirebaseImage class="thumbnail" :path="'portfolio/thumbnails/' + card.thumbnail" />
+              <FirebaseImage class="thumbnail" :path="'portfolio/thumbnails'" :image="card.thumbnail" />
             </div>
           </div>
           <hr />
@@ -78,7 +78,7 @@
           </div>
           <Spinner v-if="isEditMode" :isLoading="saving" :centered="false" class="section">
             <div class="btn-group" role="group">
-              <button type="button" class="btn btn-secondary" @click="exitEditMode()">Cancel</button>
+              <button type="button" class="btn btn-secondary" @click="isEditMode = false">Cancel</button>
               <button type="button" class="btn btn-primary" @click="saveEdits()">Save</button>
             </div>
           </Spinner>
@@ -244,7 +244,17 @@ export default class Project extends Vue {
       this.card = cardDoc.data() as PortfolioCard
 
       firestore.doc(`projects/${this.projectID}/content/data`).get().then(contentDoc => {
-        this.content = contentDoc.data() as ProjectContent
+        if (contentDoc.exists) {
+          this.content = contentDoc.data() as ProjectContent
+        } else {
+          this.content = {
+            description: '',
+            status: '',
+            version: '',
+            buttonLinks: []
+          } as ProjectContent
+        }
+
         this.contentLoading = false
       })
     })
@@ -260,21 +270,17 @@ export default class Project extends Vue {
     this.editContent.relatedBlogPosts = this.editContent.relatedBlogPosts?.map(link => Object.assign({}, link)) ?? []
   }
 
-  exitEditMode () {
-    this.isEditMode = false
-  }
-
   saveEdits () {
     const firestore = firebase.firestore()
     const batch = firestore.batch()
 
     // update card
     const cardDoc = firestore.doc(`projects/${this.projectID}`)
-    batch.update(cardDoc, this.editCard)
+    batch.set(cardDoc, this.editCard)
 
     // update content
     const contentDoc = firestore.doc(`projects/${this.projectID}/content/data`)
-    batch.update(contentDoc, this.editContent)
+    batch.set(contentDoc, this.editContent)
 
     // save batch
     this.saving = true
@@ -284,7 +290,7 @@ export default class Project extends Vue {
         this.card = this.editCard
         this.content = this.editContent
 
-        this.exitEditMode()
+        this.isEditMode = false
       })
       .catch(error => {
         alert('Error saving content: ' + error)

@@ -33,14 +33,31 @@
           <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             <div v-for="card in filteredCards()" :key="card.title" class="col">
               <div class="card shadow-sm">
-                <router-link :to="'/portfolio/' + card.id" class="stretched-link"></router-link>
-                <FirebaseImage :path="'portfolio/thumbnails/' + card.thumbnail" />
+                <router-link :to="'/portfolio/' + card.id" class="stretched-link" />
+                <FirebaseImage :path="'portfolio/thumbnails'" :image="card.thumbnail" />
                 <div class="card-body">
                   <h5 class="card-title">{{card.title}}</h5>
                   <div class="d-flex justify-content-between align-items-center">
                     <small class="text-muted">{{formatDateMonthYear(card.date)}}</small>
                   </div>
                 </div>
+              </div>
+            </div>
+            <div v-if="userLoggedIn" class="col">
+              <div class="card shadow-sm create-card">
+                <Spinner :isLoading="saving">
+                  <div v-if="!isEditMode">
+                    -- Create New Project --
+                    <a href="#" class="stretched-link" @click.prevent="isEditMode = true" />
+                  </div>
+                  <div v-else>
+                    <input type="text" class="form-control project-id-input" v-model="newProjectId">
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-secondary" @click="isEditMode = false">Cancel</button>
+                      <button type="button" class="btn btn-primary" @click="createProject()">Save</button>
+                    </div>
+                  </div>
+                </Spinner>
               </div>
             </div>
           </div>
@@ -67,6 +84,16 @@ h1 {
 .card > img {
   width: 100%;
   height: 225px;
+}
+
+.create-card {
+  padding: 1rem;
+  text-align: center;
+}
+
+.project-id-input {
+  margin-bottom: 0.5rem;
+  text-align: center;
 }
 
 .mode-light {
@@ -186,12 +213,22 @@ export default class Portfolio extends Vue {
   categories: Map<string, CategoryData> = new Map<string, CategoryData>()
   cardsLoading: boolean = true
 
+  userLoggedIn: boolean = false
+  isEditMode: boolean = false
+  newProjectId: string = ''
+  saving: boolean = false
+
   filters: Filters = {
     order: 'Relevance',
     orderDirection: 1
   }
 
   created () {
+    // listen for auth state changes
+    firebase.auth().onAuthStateChanged(user => {
+      this.userLoggedIn = user !== null
+    })
+
     // load cards from firebase
     firebase.firestore().collection('projects').get().then(collection => {
       this.cards = []
@@ -308,6 +345,31 @@ export default class Portfolio extends Vue {
     })
 
     this.$router.replace({ name: 'Portfolio', query: params })
+  }
+
+  createProject () {
+    const today = new Date()
+    const card = {
+      title: this.newProjectId,
+      category: 'other',
+      date: today.getFullYear() + '-' + (today.getMonth() + 1),
+      thumbnail: '',
+      relevance: 0
+    } as ProjectCard
+
+    // create card
+    this.saving = true
+    firebase.firestore().doc(`projects/${this.newProjectId}`).set(card)
+      .then(() => {
+        this.isEditMode = false
+        this.$router.push('/portfolio/' + this.newProjectId)
+      })
+      .catch(error => {
+        alert('Error creating project: ' + error)
+      })
+      .finally(() => {
+        this.saving = false
+      })
   }
 }
 
