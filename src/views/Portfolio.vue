@@ -36,7 +36,7 @@
                 <router-link :to="'/portfolio/' + card.id" class="stretched-link" />
                 <FirebaseImage :path="'portfolio/thumbnails'" :image="card.thumbnail" />
                 <div class="card-body">
-                  <h5 class="card-title">{{card.title}}</h5>
+                  <h5 class="card-title"><u>{{card.title}}</u></h5>
                   <div class="d-flex justify-content-between align-items-center">
                     <small class="text-muted">{{formatDateMonthYear(card.date)}}</small>
                   </div>
