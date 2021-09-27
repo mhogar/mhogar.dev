@@ -6,7 +6,14 @@
           <div class="row">
             <div class="col col-md-6 header-text">
               <h1 v-if="!isEditMode" class="title">{{card.title}}</h1>
-              <input v-else type="text" class="title-edit form-control form-control-lg" v-model="editCard.title">
+              <div v-else class="row title-edit">
+                <div class="col-10">
+                  <input type="text" class="form-control form-control-lg" v-model="editCard.title">
+                </div>
+                <div class="col-2">
+                  <input type="text" class="form-control form-control-lg" v-model="editCard.relevance">
+                </div>
+              </div>
 
               <p v-if="!isEditMode" class="lead">{{content.description}}</p>
               <textarea v-else class="description-edit form-control" rows="3" v-model="editContent.description"></textarea>
