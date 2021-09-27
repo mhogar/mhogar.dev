@@ -17,7 +17,7 @@
                     {{link.text}}
                   </a>
                 </div>
-                <LinkListEdit v-else :models="editContent.buttonLinks" />
+                <LinkListEdit v-else :models="editContent.buttonLinks" :limit="3" />
               </div>
             </div>
             <div class="col col-md-6">
@@ -70,7 +70,11 @@
                 <router-link :to="'/blog/' + link.url">{{link.text}}</router-link>
               </li>
             </ul>
-            <LinkListEdit v-else :models="editContent.relatedBlogPosts" />
+            <div v-else class="row">
+              <div class="col-6">
+                <LinkListEdit :models="editContent.relatedBlogPosts" />
+              </div>
+            </div>
           </div>
           <Spinner v-if="isEditMode" :isLoading="saving" :centered="false" class="section">
             <div class="btn-group" role="group">

@@ -10,7 +10,7 @@
       <button class="btn btn-danger btn-sm" @click.prevent="removeLink(index)"><b>X</b></button>
     </div>
   </form>
-  <button class="btn btn-success btn-sm" @click.prevent="addLink()"><b>+</b></button>
+  <button v-show="limit < 0 || models.length < limit" class="btn btn-success btn-sm" @click.prevent="addLink()"><b>+</b></button>
 </template>
 
 <style lang="scss" scoped>
@@ -30,11 +30,16 @@ import Link from '../common/Link'
 
 @Options({
   props: {
-    models: Object as PropType<Link[]>
+    models: Object as PropType<Link[]>,
+    limit: {
+      type: Number,
+      default: -1
+    }
   }
 })
 export default class extends Vue {
   models!: Link[]
+  limit!: number
 
   addLink () {
     this.models.push({} as Link)
