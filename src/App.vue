@@ -146,10 +146,10 @@ export default class App extends Vue {
 
   loadDarkModeToggleIcon () {
     if (this.darkMode) {
-      return require('./assets/icons/sun-fill.svg')
+      return require('./assets/imgs/icons/sun-fill.svg')
     }
 
-    return require('./assets/icons/moon-fill.svg')
+    return require('./assets/imgs/icons/moon-fill.svg')
   }
 
   scrollToTop () {

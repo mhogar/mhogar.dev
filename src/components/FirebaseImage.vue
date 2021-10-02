@@ -1,6 +1,6 @@
 <template>
-    <div v-if="useAsBackground" :style="`background-image: url(${url});`" />
-    <img v-else :src="url" />
+  <div v-if="useAsBackground" :style="`background-image: url(${url});`" />
+  <img v-else :src="url" />
 </template>
 
 <script lang="ts">
@@ -21,14 +21,12 @@ const path = require('path')
 export default class FirebaseImage extends Vue {
   path!: string
   image!: string
-  useAsBackground: boolean = false
+  useAsBackground!: boolean
   url: string = ''
-  loadingImage: boolean = true
 
   created () {
     if (!this.image) {
-      // TODO: implement placeholder image
-      this.url = ''
+      this.url = require('../assets/imgs/placeholder.svg')
       return
     }
 
