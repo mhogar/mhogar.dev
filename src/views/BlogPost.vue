@@ -3,15 +3,44 @@
       <Spinner :isLoading="postLoading">
         <div class="container blog-body">
             <div class="blog-post">
-              <div v-if="post">
-                <h2 class="blog-post-title">{{post.title}}</h2>
-                <p class="blog-post-meta">{{formatDateDayMonthYear(post.date)}}</p>
+              <div v-if="postId">
+                <div v-if="!isEditMode">
+                  <h2 class="blog-post-title">{{post.title}}</h2>
+                  <p class="blog-post-meta">{{formatDateDayMonthYear(post.date)}}</p>
+                </div>
+                <div v-else class="row">
+                  <div class="col col-md-6">
+                    <input type="text" class="form-control" v-model="editPost.title" />
+                  </div>
+                  <div class="col col-md-4">
+                    <input type="text" class="form-control" v-model="editPost.category" />
+                  </div>
+                  <div class="col col-md-2">
+                    <input type="text" class="form-control" v-model="editPost.date" />
+                  </div>
+                </div>
                 <hr />
-                <p v-for="paragraph in paragraphs" :key="paragraph">{{paragraph}}</p>
+                <div v-if="!isEditMode">
+                  <p>{{post.lead}}</p>
+                  <p>{{content.body}}</p>
+                </div>
+                <div v-else>
+                  <textarea class="text-field-edit form-control" rows="5" v-model="editPost.lead"></textarea>
+                  <textarea class="text-field-edit form-control" rows="20" v-model="editContent.body"></textarea>
+                </div>
+                <Spinner v-if="isEditMode" :isLoading="saving" :centered="false">
+                  <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-secondary" @click="isEditMode = false">Cancel</button>
+                    <button type="button" class="btn btn-primary" @click="saveContent()">Save</button>
+                  </div>
+                </Spinner>
+                <div v-else class="footer-links">
+                  <a class="link-secondary" href="#" @click.prevent="$router.back()">Back</a>
+                  <a v-if="userLoggedIn" class="link-secondary" href="#" @click.prevent="enterEditMode()">Edit</a>
+                </div>
               </div>
               <h2 v-else>Blog Post Not Found</h2>
-              <a class="link-secondary" href="#" @click.prevent="$router.back()">Back</a>
-            </div>
+          </div>
         </div>
       </Spinner>
     </div>
@@ -40,6 +69,14 @@
 
 .blog-post-meta {
   margin-bottom: 1.25rem;
+}
+
+.footer-links > a {
+  margin-right: 1rem;
+}
+
+.text-field-edit {
+  margin-bottom: 1rem;
 }
 
 .mode-light {
@@ -86,7 +123,7 @@ import { BlogPost } from './Blog.vue'
 import DateHelper from '../common/DateHelper'
 
 interface BlogPostContent {
-  paragraphs: string[]
+  body: string
 }
 
 @Options({
@@ -94,37 +131,88 @@ interface BlogPostContent {
   mixins: [DateHelper]
 })
 export default class extends Vue {
-  postLoading: boolean = true
+  postId: string = ''
 
-  post: BlogPost | null = null
-  paragraphs: string[] = []
+  postLoading: boolean = true
+  saving: boolean = false
+
+  post: BlogPost = {} as BlogPost
+  content: BlogPostContent = {} as BlogPostContent
+
+  userLoggedIn: boolean = false
+  isEditMode: boolean = false
+  editPost: BlogPost = this.post
+  editContent: BlogPostContent = this.content
 
   created () {
-    const id = this.$route.params.id as string
+    this.postId = this.$route.params.id as string
     const firestore = firebase.firestore()
 
+    // listen for auth state changes
+    firebase.auth().onAuthStateChanged(user => {
+      this.userLoggedIn = user !== null
+    })
+
     // load post from firebase
-    firestore.doc(`blog-posts/${id}`).get().then(postDoc => {
+    firestore.doc(`blog-posts/${this.postId}`).get().then(postDoc => {
       if (!postDoc.exists) {
+        this.postId = ''
         this.postLoading = false
         return
       }
       this.post = postDoc.data() as BlogPost
 
-      // load the paragraphs
-      firestore.doc(`blog-posts/${id}/content/data`).get().then(dataDoc => {
-        if (!this.post) {
-          return
+      // load the content
+      firestore.doc(`blog-posts/${this.postId}/content/data`).get().then(contentDoc => {
+        if (contentDoc.exists) {
+          this.content = contentDoc.data() as BlogPostContent
+        } else {
+          this.content = {
+            body: ''
+          } as BlogPostContent
         }
-
-        const content = dataDoc.data() as BlogPostContent
-
-        this.paragraphs = [this.post.lead]
-        this.paragraphs.push(...content.paragraphs)
 
         this.postLoading = false
       })
     })
+  }
+
+  enterEditMode () {
+    this.isEditMode = true
+
+    // copy original values so the changes can be reverted
+    this.editPost = Object.assign({}, this.post)
+    this.editContent = Object.assign({}, this.content)
+  }
+
+  saveContent () {
+    const firestore = firebase.firestore()
+    const batch = firestore.batch()
+
+    // update post
+    const postDoc = firestore.doc(`projects/${this.postId}`)
+    batch.set(postDoc, this.editPost)
+
+    // update content
+    const contentDoc = firestore.doc(`projects/${this.postId}/content/data`)
+    batch.set(contentDoc, this.editContent)
+
+    // commit batch
+    this.saving = true
+    batch.commit()
+      .then(() => {
+        // overwrite originals with edits
+        this.post = this.editPost
+        this.content = this.editContent
+
+        this.isEditMode = false
+      })
+      .catch(error => {
+        alert('Error saving content: ' + error)
+      })
+      .finally(() => {
+        this.saving = false
+      })
   }
 }
 
