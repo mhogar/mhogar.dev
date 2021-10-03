@@ -366,6 +366,7 @@ export default class extends Vue {
       .then(doc => {
         if (doc.exists) {
           alert('Project ID already in use')
+          this.saving = false
           return
         }
 
@@ -377,12 +378,11 @@ export default class extends Vue {
           })
           .catch(error => {
             alert('Error creating project: ' + error)
+            this.saving = false
           })
       })
       .catch(error => {
         alert('Error getting project: ' + error)
-      })
-      .finally(() => {
         this.saving = false
       })
   }

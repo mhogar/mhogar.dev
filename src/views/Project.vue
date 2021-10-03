@@ -16,7 +16,7 @@
               </div>
 
               <p v-if="!isEditMode" class="lead">{{content.description}}</p>
-              <textarea v-else class="description-edit form-control" rows="3" v-model="editContent.description"></textarea>
+              <textarea v-else class="text-field-edit form-control" rows="3" v-model="editContent.description"></textarea>
 
               <div class="button-links">
                 <div v-if="!isEditMode">
@@ -92,10 +92,18 @@
               <button type="button" class="btn btn-primary" @click="saveEdits()">Save</button>
             </div>
           </Spinner>
-          <div v-else>
+          <div v-else-if="!isDeleteMode" class="footer-links">
             <a href="#" @click.prevent="$router.back()">Back</a>
-            <a v-if="userLoggedIn" id="edit-link" href="#" @click.prevent="enterEditMode()">Edit</a>
+            <a v-if="userLoggedIn" href="#" @click.prevent="enterEditMode()">Edit</a>
+            <a v-if="userLoggedIn" href="#" @click.prevent="enterDeleteMode()">Delete</a>
           </div>
+          <Spinner v-else :isLoading="deletingImage || deletingContent" :centered="false" class="section">
+            <input type="text" class="text-field-edit form-control" v-model="deleteCheck" />
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-secondary" @click="isDeleteMode = false">Cancel</button>
+              <button type="button" class="btn btn-danger" :disabled="deleteCheck != projectID" @click="deleteProject()">Delete</button>
+            </div>
+          </Spinner>
         </div>
         <h1 v-else>Project Not Found.</h1>
       </div>
@@ -107,8 +115,8 @@
 
 @import "../assets/theme.scss";
 
-#edit-link {
-  margin-left: 1rem;
+.footer-links > a {
+  margin-right: 1rem;
 }
 
 .project {
@@ -133,7 +141,7 @@
   margin-bottom: 1rem;
 }
 
-.description-edit {
+.text-field-edit {
   margin-bottom: 1rem;
 }
 
@@ -241,6 +249,11 @@ export default class extends Vue {
   editContent: ProjectContent = this.content
   imageData: File | null = null
 
+  isDeleteMode: boolean = false
+  deletingImage: boolean = false
+  deletingContent: boolean = false
+  deleteCheck: string = ''
+
   created () {
     this.projectID = this.$route.params.id as string
     const firestore = firebase.firestore()
@@ -325,7 +338,7 @@ export default class extends Vue {
     const contentDoc = firestore.doc(`projects/${this.projectID}/content/data`)
     batch.set(contentDoc, this.editContent)
 
-    // save batch
+    // commit batch
     this.savingContent = true
     batch.commit()
       .then(() => {
@@ -340,6 +353,56 @@ export default class extends Vue {
       })
       .finally(() => {
         this.savingContent = false
+      })
+  }
+
+  enterDeleteMode () {
+    this.isDeleteMode = true
+    this.deleteCheck = ''
+  }
+
+  deleteProject () {
+    if (this.card.thumbnail === '') {
+      this.deleteContent()
+      return
+    }
+
+    // delete image
+    this.deletingImage = true
+    firebase.storage().ref('portfolio/thumbnails/' + this.card.thumbnail).delete()
+      .then(() => {
+        this.card.thumbnail = ''
+        this.deleteContent()
+      })
+      .catch(error => {
+        alert('Error deleting image: ' + error)
+      })
+      .finally(() => {
+        this.deletingImage = false
+      })
+  }
+
+  deleteContent () {
+    const firestore = firebase.firestore()
+    const batch = firestore.batch()
+
+    // delete card
+    const cardDoc = firestore.doc(`projects/${this.projectID}`)
+    batch.delete(cardDoc)
+
+    // delete content
+    const contentDoc = firestore.doc(`projects/${this.projectID}/content/data`)
+    batch.delete(contentDoc)
+
+    // commit batch
+    this.deletingContent = true
+    batch.commit()
+      .then(() => {
+        this.$router.back()
+      })
+      .catch(error => {
+        alert('Error deleting content: ' + error)
+        this.deletingContent = false
       })
   }
 }
