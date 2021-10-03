@@ -48,13 +48,13 @@
                 <Spinner :isLoading="saving">
                   <div v-if="!isEditMode">
                     -- Create New Project --
-                    <a href="#" class="stretched-link" @click.prevent="isEditMode = true" />
+                    <a href="#" class="stretched-link" @click.prevent="enterEditMode()" />
                   </div>
                   <div v-else>
                     <input type="text" class="form-control project-id-input" v-model="newProjectId">
                     <div class="btn-group" role="group">
                       <button type="button" class="btn btn-secondary" @click="isEditMode = false">Cancel</button>
-                      <button type="button" class="btn btn-primary" @click="createProject()">Create</button>
+                      <button type="button" class="btn btn-primary" :disabled="!newProjectId" @click="createProject()">Create</button>
                     </div>
                   </div>
                 </Spinner>
@@ -347,6 +347,11 @@ export default class extends Vue {
     this.$router.replace({ name: 'Portfolio', query: params })
   }
 
+  enterEditMode () {
+    this.isEditMode = true
+    this.newProjectId = ''
+  }
+
   createProject () {
     const today = new Date()
     const card = {
@@ -357,8 +362,7 @@ export default class extends Vue {
       relevance: 0
     } as ProjectCard
 
-    const firestore = firebase.firestore()
-    const docRef = firestore.doc(`projects/${this.newProjectId}`)
+    const docRef = firebase.firestore().doc(`projects/${this.newProjectId}`)
 
     // check project does not aleardy exist
     this.saving = true
@@ -373,7 +377,6 @@ export default class extends Vue {
         // create project
         docRef.set(card)
           .then(() => {
-            this.isEditMode = false
             this.$router.push('/portfolio/' + this.newProjectId)
           })
           .catch(error => {

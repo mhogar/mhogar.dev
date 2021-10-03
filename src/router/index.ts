@@ -54,7 +54,7 @@ export default createRouter({
         } else {
           resolve({ left: 0, top: 0 })
         }
-      }, 400)
+      }, 1000)
     })
   }
 })
