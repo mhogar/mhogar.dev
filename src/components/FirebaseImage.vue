@@ -18,7 +18,7 @@ const path = require('path')
     useAsBackground: Boolean
   }
 })
-export default class FirebaseImage extends Vue {
+export default class extends Vue {
   path!: string
   image!: string
   useAsBackground!: boolean

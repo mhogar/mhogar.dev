@@ -117,7 +117,7 @@ interface CategoryData {
   components: { Spinner },
   mixins: [StringHelper, DateHelper]
 })
-export default class BlogComponent extends Vue {
+export default class extends Vue {
   postsLoading: boolean = true
 
   categoryMap: Map<string, CategoryData> = new Map<string, CategoryData>()

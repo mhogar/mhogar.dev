@@ -112,7 +112,7 @@ import { Vue } from 'vue-class-component'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 
-export default class App extends Vue {
+export default class extends Vue {
   darkMode: boolean = true
   userLoggedIn: boolean = false
 

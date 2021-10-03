@@ -93,7 +93,7 @@ interface BlogPostContent {
   components: { Spinner },
   mixins: [DateHelper]
 })
-export default class BlogPostComponent extends Vue {
+export default class extends Vue {
   postLoading: boolean = true
 
   post: BlogPost | null = null

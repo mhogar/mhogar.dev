@@ -27,7 +27,7 @@ import { Options, Vue } from 'vue-class-component'
     }
   }
 })
-export default class Spinner extends Vue {
+export default class extends Vue {
   isLoading!: boolean
   centered!: boolean
 }

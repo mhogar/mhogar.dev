@@ -70,7 +70,7 @@ export interface FeaturetteContent {
   },
   components: { StaticImage }
 })
-export default class Featurettes extends Vue {
+export default class extends Vue {
   content!: FeaturetteContent[]
 
   calcColumnOrder (index: number): number {

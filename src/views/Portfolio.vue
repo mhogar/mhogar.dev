@@ -207,7 +207,7 @@ interface FiltersParams {
     }
   }
 })
-export default class Portfolio extends Vue {
+export default class extends Vue {
   darkMode!: boolean
   cards: ProjectCard[] = []
   categories: Map<string, CategoryData> = new Map<string, CategoryData>()
