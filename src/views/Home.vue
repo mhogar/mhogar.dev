@@ -44,7 +44,7 @@ import Featurettes, { FeaturetteContent } from '../components/Featurettes.vue'
     Spinner, Carousel, Featurettes
   }
 })
-export default class Home extends Vue {
+export default class extends Vue {
   carouselSlides: CarouselSlide[] = []
   featurettesContent: FeaturetteContent[] = []
 

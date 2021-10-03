@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isLoading" class="d-flex justify-content-center">
+  <div v-if="isLoading" :class="centered ? 'd-flex justify-content-center' : ''">
     <div class="spinner-border" role="status" />
   </div>
   <slot v-else />
@@ -20,11 +20,16 @@ import { Options, Vue } from 'vue-class-component'
 
 @Options({
   props: {
-    isLoading: Boolean
+    isLoading: Boolean,
+    centered: {
+      type: Boolean,
+      default: true
+    }
   }
 })
-export default class Spinner extends Vue {
+export default class extends Vue {
   isLoading!: boolean
+  centered!: boolean
 }
 
 </script>

@@ -93,7 +93,7 @@ interface BlogPostContent {
   components: { Spinner },
   mixins: [DateHelper]
 })
-export default class BlogPostComponent extends Vue {
+export default class extends Vue {
   postLoading: boolean = true
 
   post: BlogPost | null = null
@@ -104,7 +104,7 @@ export default class BlogPostComponent extends Vue {
     const firestore = firebase.firestore()
 
     // load post from firebase
-    firestore.doc(`blog-posts/${id}`).onSnapshot(postDoc => {
+    firestore.doc(`blog-posts/${id}`).get().then(postDoc => {
       if (!postDoc.exists) {
         this.postLoading = false
         return
@@ -112,7 +112,7 @@ export default class BlogPostComponent extends Vue {
       this.post = postDoc.data() as BlogPost
 
       // load the paragraphs
-      firestore.doc(`blog-posts/${id}/content/data`).onSnapshot(dataDoc => {
+      firestore.doc(`blog-posts/${id}/content/data`).get().then(dataDoc => {
         if (!this.post) {
           return
         }

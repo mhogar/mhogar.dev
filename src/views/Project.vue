@@ -2,52 +2,108 @@
   <div class="project">
     <Spinner :isLoading="contentLoading">
       <div class="container">
-        <div v-if="card">
+        <div v-if="projectID">
           <div class="row">
             <div class="col col-md-6 header-text">
-              <h1 class="title">{{card.title}}</h1>
-              <p class="lead">{{content.description}}</p>
+              <h1 v-if="!isEditMode" class="title">{{card.title}}</h1>
+              <div v-else class="row title-edit">
+                <div class="col-10">
+                  <input type="text" class="form-control form-control-lg" v-model="editCard.title">
+                </div>
+                <div class="col-2">
+                  <input type="text" class="form-control form-control-lg" v-model="editCard.relevance">
+                </div>
+              </div>
+
+              <p v-if="!isEditMode" class="lead">{{content.description}}</p>
+              <textarea v-else class="text-field-edit form-control" rows="3" v-model="editContent.description"></textarea>
+
               <div class="button-links">
-                <a v-for="link in content.buttonLinks" :key="link.url" class="btn btn-lg btn-primary" :href="link.url" target="_blank">
-                  {{link.text}}
-                </a>
+                <div v-if="!isEditMode">
+                  <a v-for="link in content.buttonLinks" :key="link.url" class="btn btn-lg btn-primary" :href="link.url" target="_blank">
+                    {{link.text}}
+                  </a>
+                </div>
+                <LinkListEdit v-else :models="editContent.buttonLinks" :limit="3" />
               </div>
             </div>
             <div class="col col-md-6">
-              <FirebaseImage class="thumbnail" :path="'portfolio/thumbnails/' + card.thumbnail" />
+              <FirebaseImage v-if="!isEditMode" class="thumbnail" :path="'portfolio/thumbnails'" :image="card.thumbnail" />
+              <div v-else class="image-edit">
+                <input class="form-control" type="file" accept="image/*" :disabled="uploadingImage" @change="fileInputChanged" />
+              </div>
             </div>
           </div>
           <hr />
           <div class="info-grid">
             <div class="row d-flex justify-content-center header">
               <div class="col-md-2">
-                Category<p><span class="badge rounded-pill">{{capitalize(card.category)}}</span></p>
+                Category
+                <p>
+                  <span v-if="!isEditMode" class="badge rounded-pill">{{capitalize(card.category)}}</span>
+                  <input v-else type="text" class="info-badge-edit form-control" v-model="editCard.category">
+                </p>
               </div>
               <div class="col-md-2">
-                Status<p><span class="badge rounded-pill">{{capitalize(content.status)}}</span></p>
+                Status
+                <p>
+                  <span v-if="!isEditMode" class="badge rounded-pill">{{capitalize(content.status)}}</span>
+                  <input v-else type="text" class="info-badge-edit form-control" v-model="editContent.status">
+                </p>
               </div>
               <div class="col-md-2">
-                Initial Release Date<p><span class="badge rounded-pill">{{formatDateMonthYear(card.date)}}</span></p>
+                Initial Release Date
+                <p>
+                  <span v-if="!isEditMode" class="badge rounded-pill">{{formatDateMonthYear(card.date)}}</span>
+                  <input v-else type="text" class="info-badge-edit form-control" v-model="editCard.date">
+                </p>
               </div>
               <div class="col-md-2">
-                Current Version<p><span class="badge rounded-pill">{{content.version}}</span></p>
+                Current Version
+                <p>
+                  <span v-if="!isEditMode" class="badge rounded-pill">{{content.version}}</span>
+                  <input v-else type="text" class="info-badge-edit form-control" v-model="editContent.version">
+                </p>
               </div>
             </div>
           </div>
           <hr />
-          <div v-if="content.additionalThoughts" class="section">
+          <div v-if="content.additionalThoughts || isEditMode" class="section">
             <h4>Additional Thoughts</h4>
-            <p>{{content.additionalThoughts}}</p>
+            <p v-if="!isEditMode">{{content.additionalThoughts}}</p>
+            <textarea v-else class="form-control" rows="3" v-model="editContent.additionalThoughts"></textarea>
           </div>
-          <div v-if="content.relatedBlogPosts" class="section">
+          <div v-if="content.relatedBlogPosts?.length > 0 || isEditMode" class="section">
             <h4>Related Blog Posts</h4>
-            <ul>
+            <ul v-if="!isEditMode">
               <li v-for="link in content.relatedBlogPosts" :key="link.url">
                 <router-link :to="'/blog/' + link.url">{{link.text}}</router-link>
               </li>
             </ul>
+            <div v-else class="row">
+              <div class="col-6">
+                <LinkListEdit :models="editContent.relatedBlogPosts" />
+              </div>
+            </div>
           </div>
-          <a href="#" @click.prevent="$router.back()">Back</a>
+          <Spinner v-if="isEditMode" :isLoading="savingContent || uploadingImage" :centered="false" class="section">
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-secondary" @click="isEditMode = false">Cancel</button>
+              <button type="button" class="btn btn-primary" @click="saveEdits()">Save</button>
+            </div>
+          </Spinner>
+          <div v-else-if="!isDeleteMode" class="footer-links">
+            <a href="#" @click.prevent="$router.back()">Back</a>
+            <a v-if="userLoggedIn" href="#" @click.prevent="enterEditMode()">Edit</a>
+            <a v-if="userLoggedIn" href="#" @click.prevent="enterDeleteMode()">Delete</a>
+          </div>
+          <Spinner v-else :isLoading="deletingImage || deletingContent" :centered="false" class="section">
+            <input type="text" class="text-field-edit form-control" v-model="deleteCheck" />
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-secondary" @click="isDeleteMode = false">Cancel</button>
+              <button type="button" class="btn btn-danger" :disabled="deleteCheck != projectID" @click="deleteProject()">Delete</button>
+            </div>
+          </Spinner>
         </div>
         <h1 v-else>Project Not Found.</h1>
       </div>
@@ -58,6 +114,10 @@
 <style lang="scss" scoped>
 
 @import "../assets/theme.scss";
+
+.footer-links > a {
+  margin-right: 1rem;
+}
 
 .project {
   padding-top: 1rem;
@@ -76,6 +136,19 @@
   font-size: 3.5rem;
 }
 
+.title-edit {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.text-field-edit {
+  margin-bottom: 1rem;
+}
+
+.image-edit {
+  padding: 3rem;
+}
+
 .button-links .btn {
   margin-right: 0.5rem;
 }
@@ -88,6 +161,11 @@
 
 .info-grid .header {
   margin-bottom: 0.5rem;
+}
+
+.info-badge-edit {
+  text-align: center;
+  margin-top: 5px;
 }
 
 .header-text {
@@ -135,7 +213,8 @@ import 'firebase/firestore'
 
 import Spinner from '../components/Spinner.vue'
 import FirebaseImage from '../components/FirebaseImage.vue'
-import PortfolioCard from './Portfolio.vue'
+import LinkListEdit from '../components/LinkListEdit.vue'
+import { ProjectCard } from './Portfolio.vue'
 
 import StringHelper from '../common/StringHelper'
 import DateHelper from '../common/DateHelper'
@@ -151,31 +230,180 @@ interface ProjectContent {
 }
 
 @Options({
-  components: { Spinner, FirebaseImage },
+  components: { Spinner, FirebaseImage, LinkListEdit },
   mixins: [StringHelper, DateHelper]
 })
-export default class Project extends Vue {
-  card: PortfolioCard | null = null
-  content: ProjectContent = {} as ProjectContent
+export default class extends Vue {
+  projectID: string = ''
+
   contentLoading: boolean = true
+  savingContent: boolean = false
+  uploadingImage: boolean = false
+
+  card: ProjectCard = {} as ProjectCard
+  content: ProjectContent = {} as ProjectContent
+
+  userLoggedIn: boolean = false
+  isEditMode: boolean = false
+  editCard: ProjectCard = this.card
+  editContent: ProjectContent = this.content
+  imageData: File | null = null
+
+  isDeleteMode: boolean = false
+  deletingImage: boolean = false
+  deletingContent: boolean = false
+  deleteCheck: string = ''
 
   created () {
-    const id = this.$route.params.id as string
+    this.projectID = this.$route.params.id as string
     const firestore = firebase.firestore()
 
+    // listen for auth state changes
+    firebase.auth().onAuthStateChanged(user => {
+      this.userLoggedIn = user !== null
+    })
+
     // load card and content from firebase
-    firestore.doc(`projects/${id}`).onSnapshot(cardDoc => {
+    firestore.doc(`projects/${this.projectID}`).get().then(cardDoc => {
       if (!cardDoc.exists) {
+        this.projectID = ''
         this.contentLoading = false
         return
       }
-      this.card = cardDoc.data() as PortfolioCard
+      this.card = cardDoc.data() as ProjectCard
 
-      firestore.doc(`projects/${id}/content/data`).onSnapshot(contentDoc => {
-        this.content = contentDoc.data() as ProjectContent
+      firestore.doc(`projects/${this.projectID}/content/data`).get().then(contentDoc => {
+        if (contentDoc.exists) {
+          this.content = contentDoc.data() as ProjectContent
+        } else {
+          this.content = {
+            description: 'Add description...',
+            status: 'unknown',
+            version: 'unknown',
+            buttonLinks: []
+          } as ProjectContent
+        }
+
         this.contentLoading = false
       })
     })
+  }
+
+  enterEditMode () {
+    this.isEditMode = true
+    this.imageData = null
+
+    // copy original values so the changes can be reverted
+    this.editCard = Object.assign({}, this.card)
+    this.editContent = Object.assign({}, this.content)
+    this.editContent.buttonLinks = this.editContent.buttonLinks.map(link => Object.assign({}, link))
+    this.editContent.relatedBlogPosts = this.editContent.relatedBlogPosts?.map(link => Object.assign({}, link)) ?? []
+  }
+
+  fileInputChanged (event: any) {
+    this.imageData = event.target.files[0]
+  }
+
+  saveEdits () {
+    if (this.imageData == null) {
+      this.updateCardAndContent()
+      return
+    }
+    const imageData = this.imageData
+
+    // upload image
+    this.uploadingImage = true
+    firebase.storage().ref('portfolio/thumbnails/' + imageData.name).put(imageData)
+      .then(() => {
+        this.editCard.thumbnail = imageData.name
+        this.updateCardAndContent()
+      })
+      .catch(error => {
+        alert('Error uploading image: ' + error)
+      })
+      .finally(() => {
+        this.uploadingImage = false
+      })
+  }
+
+  updateCardAndContent () {
+    const firestore = firebase.firestore()
+    const batch = firestore.batch()
+
+    // update card
+    const cardDoc = firestore.doc(`projects/${this.projectID}`)
+    batch.set(cardDoc, this.editCard)
+
+    // update content
+    const contentDoc = firestore.doc(`projects/${this.projectID}/content/data`)
+    batch.set(contentDoc, this.editContent)
+
+    // commit batch
+    this.savingContent = true
+    batch.commit()
+      .then(() => {
+        // overwrite originals with edits
+        this.card = this.editCard
+        this.content = this.editContent
+
+        this.isEditMode = false
+      })
+      .catch(error => {
+        alert('Error saving content: ' + error)
+      })
+      .finally(() => {
+        this.savingContent = false
+      })
+  }
+
+  enterDeleteMode () {
+    this.isDeleteMode = true
+    this.deleteCheck = ''
+  }
+
+  deleteProject () {
+    if (this.card.thumbnail === '') {
+      this.deleteContent()
+      return
+    }
+
+    // delete image
+    this.deletingImage = true
+    firebase.storage().ref('portfolio/thumbnails/' + this.card.thumbnail).delete()
+      .then(() => {
+        this.card.thumbnail = ''
+        this.deleteContent()
+      })
+      .catch(error => {
+        alert('Error deleting image: ' + error)
+      })
+      .finally(() => {
+        this.deletingImage = false
+      })
+  }
+
+  deleteContent () {
+    const firestore = firebase.firestore()
+    const batch = firestore.batch()
+
+    // delete card
+    const cardDoc = firestore.doc(`projects/${this.projectID}`)
+    batch.delete(cardDoc)
+
+    // delete content
+    const contentDoc = firestore.doc(`projects/${this.projectID}/content/data`)
+    batch.delete(contentDoc)
+
+    // commit batch
+    this.deletingContent = true
+    batch.commit()
+      .then(() => {
+        this.$router.back()
+      })
+      .catch(error => {
+        alert('Error deleting content: ' + error)
+        this.deletingContent = false
+      })
   }
 }
 
