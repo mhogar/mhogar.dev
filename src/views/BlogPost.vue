@@ -28,16 +28,25 @@
                   <textarea class="text-field-edit form-control" rows="5" v-model="editPost.lead"></textarea>
                   <textarea class="text-field-edit form-control" rows="20" v-model="editContent.body"></textarea>
                 </div>
+                <hr />
                 <Spinner v-if="isEditMode" :isLoading="saving" :centered="false">
                   <div class="btn-group" role="group">
                     <button type="button" class="btn btn-secondary" @click="isEditMode = false">Cancel</button>
                     <button type="button" class="btn btn-primary" @click="saveContent()">Save</button>
                   </div>
                 </Spinner>
-                <div v-else class="footer-links">
+                <div v-else-if="!isDeleteMode" class="footer-links">
                   <a class="link-secondary" href="#" @click.prevent="$router.back()">Back</a>
                   <a v-if="userLoggedIn" class="link-secondary" href="#" @click.prevent="enterEditMode()">Edit</a>
+                  <a v-if="userLoggedIn" href="#" @click.prevent="enterDeleteMode()">Delete</a>
                 </div>
+                <Spinner v-else :isLoading="deletingImage || deletingContent" :centered="false" class="section">
+                  <input type="text" class="text-field-edit form-control" v-model="deleteCheck" />
+                  <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-secondary" @click="isDeleteMode = false">Cancel</button>
+                    <button type="button" class="btn btn-danger" :disabled="deleteCheck != postId" @click="deleteBlogPost()">Delete</button>
+                  </div>
+                </Spinner>
               </div>
               <h2 v-else>Blog Post Not Found</h2>
           </div>
@@ -146,6 +155,10 @@ export default class extends Vue {
   editPost: BlogPost = this.post
   editContent: BlogPostContent = this.content
 
+  isDeleteMode: boolean = false
+  deleting: boolean = false
+  deleteCheck: string = ''
+
   created () {
     this.postId = this.$route.params.id as string
     const firestore = firebase.firestore()
@@ -218,6 +231,35 @@ export default class extends Vue {
       })
       .finally(() => {
         this.saving = false
+      })
+  }
+
+  enterDeleteMode () {
+    this.isDeleteMode = true
+    this.deleteCheck = ''
+  }
+
+  deleteBlogPost () {
+    const firestore = firebase.firestore()
+    const batch = firestore.batch()
+
+    // delete post
+    const postDoc = firestore.doc(`blog-posts/${this.postId}`)
+    batch.delete(postDoc)
+
+    // delete content
+    const contentDoc = firestore.doc(`blog-posts/${this.postId}/content/data`)
+    batch.delete(contentDoc)
+
+    // commit batch
+    this.deleting = true
+    batch.commit()
+      .then(() => {
+        this.$router.back()
+      })
+      .catch(error => {
+        alert('Error deleting blog post: ' + error)
+        this.deleting = false
       })
   }
 }
