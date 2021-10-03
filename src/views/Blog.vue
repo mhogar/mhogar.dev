@@ -117,7 +117,7 @@ interface CategoryData {
   components: { Spinner },
   mixins: [StringHelper, DateHelper]
 })
-export default class BlogComponent extends Vue {
+export default class extends Vue {
   postsLoading: boolean = true
 
   categoryMap: Map<string, CategoryData> = new Map<string, CategoryData>()
@@ -127,11 +127,11 @@ export default class BlogComponent extends Vue {
     this.loadSelectedCategory()
 
     // load posts from firebase
-    firebase.firestore().collection('blog-posts').onSnapshot(snapshot => {
+    firebase.firestore().collection('blog-posts').get().then(collection => {
       this.categoryMap.clear()
 
       // create the posts and store in category map
-      snapshot.docs.forEach(doc => {
+      collection.docs.forEach(doc => {
         const post = doc.data() as BlogPost
         post.id = doc.id
 

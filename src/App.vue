@@ -112,7 +112,7 @@ import { Vue } from 'vue-class-component'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 
-export default class App extends Vue {
+export default class extends Vue {
   darkMode: boolean = true
   userLoggedIn: boolean = false
 
@@ -146,10 +146,10 @@ export default class App extends Vue {
 
   loadDarkModeToggleIcon () {
     if (this.darkMode) {
-      return require('./assets/icons/sun-fill.svg')
+      return require('./assets/imgs/icons/sun-fill.svg')
     }
 
-    return require('./assets/icons/moon-fill.svg')
+    return require('./assets/imgs/icons/moon-fill.svg')
   }
 
   scrollToTop () {

@@ -85,7 +85,7 @@ export interface CarouselSlide {
   },
   components: { StaticImage }
 })
-export default class Carousel extends Vue {
+export default class extends Vue {
   id!: string
   slides!: CarouselSlide[]
 
