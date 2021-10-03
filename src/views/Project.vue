@@ -28,7 +28,10 @@
               </div>
             </div>
             <div class="col col-md-6">
-              <FirebaseImage class="thumbnail" :path="'portfolio/thumbnails'" :image="card.thumbnail" />
+              <FirebaseImage v-if="!isEditMode" class="thumbnail" :path="'portfolio/thumbnails'" :image="card.thumbnail" />
+              <div v-else class="image-edit">
+                <input class="form-control" type="file" accept="image/*" :disabled="uploadingImage" @change="fileInputChanged" />
+              </div>
             </div>
           </div>
           <hr />
@@ -83,7 +86,7 @@
               </div>
             </div>
           </div>
-          <Spinner v-if="isEditMode" :isLoading="saving" :centered="false" class="section">
+          <Spinner v-if="isEditMode" :isLoading="savingContent || uploadingImage" :centered="false" class="section">
             <div class="btn-group" role="group">
               <button type="button" class="btn btn-secondary" @click="isEditMode = false">Cancel</button>
               <button type="button" class="btn btn-primary" @click="saveEdits()">Save</button>
@@ -132,6 +135,10 @@
 
 .description-edit {
   margin-bottom: 1rem;
+}
+
+.image-edit {
+  padding: 3rem;
 }
 
 .button-links .btn {
@@ -199,7 +206,7 @@ import 'firebase/firestore'
 import Spinner from '../components/Spinner.vue'
 import FirebaseImage from '../components/FirebaseImage.vue'
 import LinkListEdit from '../components/LinkListEdit.vue'
-import PortfolioCard from './Portfolio.vue'
+import { ProjectCard } from './Portfolio.vue'
 
 import StringHelper from '../common/StringHelper'
 import DateHelper from '../common/DateHelper'
@@ -218,19 +225,21 @@ interface ProjectContent {
   components: { Spinner, FirebaseImage, LinkListEdit },
   mixins: [StringHelper, DateHelper]
 })
-export default class Project extends Vue {
+export default class extends Vue {
   projectID: string = ''
 
   contentLoading: boolean = true
-  saving: boolean = false
+  savingContent: boolean = false
+  uploadingImage: boolean = false
 
-  card: PortfolioCard = {} as PortfolioCard
+  card: ProjectCard = {} as ProjectCard
   content: ProjectContent = {} as ProjectContent
 
   userLoggedIn: boolean = false
   isEditMode: boolean = false
-  editCard: PortfolioCard = this.card
+  editCard: ProjectCard = this.card
   editContent: ProjectContent = this.content
+  imageData: File | null = null
 
   created () {
     this.projectID = this.$route.params.id as string
@@ -248,7 +257,7 @@ export default class Project extends Vue {
         this.contentLoading = false
         return
       }
-      this.card = cardDoc.data() as PortfolioCard
+      this.card = cardDoc.data() as ProjectCard
 
       firestore.doc(`projects/${this.projectID}/content/data`).get().then(contentDoc => {
         if (contentDoc.exists) {
@@ -269,6 +278,7 @@ export default class Project extends Vue {
 
   enterEditMode () {
     this.isEditMode = true
+    this.imageData = null
 
     // copy original values so the changes can be reverted
     this.editCard = Object.assign({}, this.card)
@@ -277,7 +287,33 @@ export default class Project extends Vue {
     this.editContent.relatedBlogPosts = this.editContent.relatedBlogPosts?.map(link => Object.assign({}, link)) ?? []
   }
 
+  fileInputChanged (event: any) {
+    this.imageData = event.target.files[0]
+  }
+
   saveEdits () {
+    if (this.imageData == null) {
+      this.updateCardAndContent()
+      return
+    }
+    const imageData = this.imageData
+
+    // upload image
+    this.uploadingImage = true
+    firebase.storage().ref('portfolio/thumbnails/' + imageData.name).put(imageData)
+      .then(() => {
+        this.editCard.thumbnail = imageData.name
+        this.updateCardAndContent()
+      })
+      .catch(error => {
+        alert('Error uploading image: ' + error)
+      })
+      .finally(() => {
+        this.uploadingImage = false
+      })
+  }
+
+  updateCardAndContent () {
     const firestore = firebase.firestore()
     const batch = firestore.batch()
 
@@ -290,7 +326,7 @@ export default class Project extends Vue {
     batch.set(contentDoc, this.editContent)
 
     // save batch
-    this.saving = true
+    this.savingContent = true
     batch.commit()
       .then(() => {
         // overwrite originals with edits
@@ -303,7 +339,7 @@ export default class Project extends Vue {
         alert('Error saving content: ' + error)
       })
       .finally(() => {
-        this.saving = false
+        this.savingContent = false
       })
   }
 }
