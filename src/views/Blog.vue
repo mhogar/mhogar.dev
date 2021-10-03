@@ -22,6 +22,16 @@
           </div>
           <hr class="seperator" />
         </div>
+        <Spinner v-if="userLoggedIn" :isLoading="saving" :centered="false">
+          <a v-if="!isEditMode" class="link-secondary" href="#" @click.prevent="enterEditMode()">New Post</a>
+          <div v-else>
+            <input type="text" class="form-control post-id-input" v-model="newPostId">
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-secondary" @click="isEditMode = false">Cancel</button>
+              <button type="button" class="btn btn-primary" :disabled="!newPostId" @click="createBlogPost()">Create</button>
+            </div>
+          </div>
+        </Spinner>
       </div>
     </Spinner>
   </div>
@@ -55,6 +65,10 @@
 
 .link-secondary.selected {
   font-weight: bold;
+}
+
+.post-id-input {
+  margin-bottom: 0.5rem;
 }
 
 .mode-light {
@@ -123,8 +137,18 @@ export default class extends Vue {
   categoryMap: Map<string, CategoryData> = new Map<string, CategoryData>()
   selectedCategory: string = ''
 
+  userLoggedIn: boolean = false
+  isEditMode: boolean = false
+  newPostId: string = ''
+  saving: boolean = false
+
   created () {
     this.loadSelectedCategory()
+
+    // listen for auth state changes
+    firebase.auth().onAuthStateChanged(user => {
+      this.userLoggedIn = user !== null
+    })
 
     // load posts from firebase
     firebase.firestore().collection('blog-posts').get().then(collection => {
@@ -181,6 +205,48 @@ export default class extends Vue {
 
   linkSelected (category: string): string {
     return this.selectedCategory === category ? 'selected' : ''
+  }
+
+  enterEditMode () {
+    this.isEditMode = true
+    this.newPostId = ''
+  }
+
+  createBlogPost () {
+    const today = new Date()
+    const post = {
+      title: this.newPostId,
+      category: 'unknown',
+      date: today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate(),
+      lead: ''
+    } as BlogPost
+
+    const docRef = firebase.firestore().doc(`blog-posts/${this.newPostId}`)
+
+    // check blog post does not aleardy exist
+    this.saving = true
+    docRef.get()
+      .then(doc => {
+        if (doc.exists) {
+          alert('Blog post ID already in use')
+          this.saving = false
+          return
+        }
+
+        // create blog post
+        docRef.set(post)
+          .then(() => {
+            this.$router.push('/blog/' + this.newPostId)
+          })
+          .catch(error => {
+            alert('Error creating blog post: ' + error)
+            this.saving = false
+          })
+      })
+      .catch(error => {
+        alert('Error getting blog post: ' + error)
+        this.saving = false
+      })
   }
 }
 
