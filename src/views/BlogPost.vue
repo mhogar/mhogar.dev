@@ -22,7 +22,7 @@
                 <hr />
                 <div v-if="!isEditMode">
                   <p>{{post.lead}}</p>
-                  <p>{{content.body}}</p>
+                  <p v-html="renderMarkdown(content.body)" />
                 </div>
                 <div v-else>
                   <textarea class="text-field-edit form-control" rows="5" v-model="editPost.lead"></textarea>
@@ -122,6 +122,8 @@ import Spinner from '../components/Spinner.vue'
 import { BlogPost } from './Blog.vue'
 import DateHelper from '../common/DateHelper'
 
+const marked = require('marked')
+
 interface BlogPostContent {
   body: string
 }
@@ -177,6 +179,10 @@ export default class extends Vue {
     })
   }
 
+  renderMarkdown (src: string): string {
+    return marked(src)
+  }
+
   enterEditMode () {
     this.isEditMode = true
 
@@ -190,11 +196,11 @@ export default class extends Vue {
     const batch = firestore.batch()
 
     // update post
-    const postDoc = firestore.doc(`projects/${this.postId}`)
+    const postDoc = firestore.doc(`blog-posts/${this.postId}`)
     batch.set(postDoc, this.editPost)
 
     // update content
-    const contentDoc = firestore.doc(`projects/${this.postId}/content/data`)
+    const contentDoc = firestore.doc(`blog-posts/${this.postId}/content/data`)
     batch.set(contentDoc, this.editContent)
 
     // commit batch
