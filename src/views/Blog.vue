@@ -17,7 +17,7 @@
           <div class="blog-post">
             <h2 class="blog-post-title">{{post.title}}</h2>
             <p class="blog-post-meta">{{formatDateDayMonthYear(post.date)}}</p>
-            <p>{{post.lead}}</p>
+            <p v-html="renderMarkdown(post.lead)" />
             <router-link :to="'/blog/' + post.id" class="link-secondary">View Full Post</router-link>
           </div>
           <hr class="seperator" />
@@ -113,6 +113,7 @@ import Spinner from '../components/Spinner.vue'
 
 import StringHelper from '../common/StringHelper'
 import DateHelper from '../common/DateHelper'
+import MarkdownHelper from '../common/MarkdownHelper'
 
 export interface BlogPost {
   id: string
@@ -129,7 +130,7 @@ interface CategoryData {
 
 @Options({
   components: { Spinner },
-  mixins: [StringHelper, DateHelper]
+  mixins: [StringHelper, DateHelper, MarkdownHelper]
 })
 export default class extends Vue {
   postsLoading: boolean = true

@@ -21,7 +21,7 @@
                 </div>
                 <hr />
                 <div v-if="!isEditMode">
-                  <p>{{post.lead}}</p>
+                  <p v-html="renderMarkdown(post.lead)" />
                   <p v-html="renderMarkdown(content.body)" />
                 </div>
                 <div v-else>
@@ -130,8 +130,7 @@ import Spinner from '../components/Spinner.vue'
 
 import { BlogPost } from './Blog.vue'
 import DateHelper from '../common/DateHelper'
-
-const marked = require('marked')
+import MarkdownHelper from '../common/MarkdownHelper'
 
 interface BlogPostContent {
   body: string
@@ -139,7 +138,7 @@ interface BlogPostContent {
 
 @Options({
   components: { Spinner },
-  mixins: [DateHelper]
+  mixins: [DateHelper, MarkdownHelper]
 })
 export default class extends Vue {
   postId: string = ''
@@ -190,10 +189,6 @@ export default class extends Vue {
         this.postLoading = false
       })
     })
-  }
-
-  renderMarkdown (src: string): string {
-    return marked(src)
   }
 
   enterEditMode () {
