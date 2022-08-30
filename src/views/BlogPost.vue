@@ -20,7 +20,7 @@
                   </div>
                 </div>
                 <hr />
-                <div v-if="!isEditMode">
+                <div class="blog-text" v-if="!isEditMode">
                   <p v-html="renderMarkdown(post.lead)" />
                   <p v-html="renderMarkdown(content.body)" />
                 </div>
@@ -64,7 +64,7 @@
 }
 
 .blog-body {
-  padding: 2rem;
+  padding: rem;
 }
 
 .blog-post {
@@ -78,6 +78,13 @@
 
 .blog-post-meta {
   margin-bottom: 1.25rem;
+}
+
+.blog-text {
+  font-size: 20pt;
+  padding: 2rem;
+  text-align: justify;
+  line-height: 2.3rem;
 }
 
 .footer-links > a {
@@ -115,6 +122,12 @@
 
   .blog-post {
     padding: 0rem;
+  }
+
+  .blog-text {
+    padding: 0pt;
+    font-size: 16pt;
+    line-height: 1.8rem;
   }
 }
 
