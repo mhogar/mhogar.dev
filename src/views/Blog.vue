@@ -17,7 +17,7 @@
           <div class="blog-post">
             <h2 class="blog-post-title">{{post.title}}</h2>
             <p class="blog-post-meta">{{formatDateDayMonthYear(post.date)}}</p>
-            <p v-html="renderMarkdown(post.lead)" />
+            <p class="blog-text" v-html="renderMarkdown(post.lead)" />
             <router-link :to="'/blog/' + post.id" class="link-secondary">View Full Post</router-link>
           </div>
           <hr class="seperator" />
@@ -61,6 +61,12 @@
 
 .blog-post-meta {
   margin-bottom: 1.25rem;
+}
+
+.blog-text {
+  font-size: 16pt;
+  text-align: justify;
+  line-height: 1.7rem;
 }
 
 .link-secondary.selected {
